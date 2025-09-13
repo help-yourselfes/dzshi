@@ -1,0 +1,15 @@
+:root {
+}
+
+html {
+  --background:  white;
+  --text: black;
+  --accent: blue;
+  --font: 'Roboto'
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
