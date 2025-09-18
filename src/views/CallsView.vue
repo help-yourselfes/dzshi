@@ -1,53 +1,65 @@
 <template>
     <div>
-        <h1>Звонки</h1>
-        <div v-if="schedule.generated" class="schedule">
-            <div v-for="(part, index) in schedule.parts" :key="index" :part="part">
-                <div v-if="part.type === 'lesson'">
-                    {{ part.number }} Урок
-                    <TimeSpan :time="part.start" /> -
-                    <TimeSpan :time="part.end" />
-                </div>
-                <div v-else-if="part.type === 'break'">
-                    Перемена
-                    {{ part.length }} минут
-                </div>
-                <div v-else>
-                    Большая перемена
-                    <TimeSpan :time="part.start" />
-                </div>
-            </div>
+        <div v-if="calls" class="list">
+            <Call v-for="(call, index) in calls" :call="call" :key="index"></Call>
         </div>
         <div v-else>
-            Загружаю...
+            Загружаю ...
         </div>
     </div>
 </template>
 
 <script lang="ts">
+import Call from '@/components/Calls/Call.vue';
 import TimeSpan from '@/components/primitives/TimeSpan.vue';
-import { getSchedule, type schedule } from '@/data/functions/callsSchedule';
-import { currentPart } from '@/data/functions/current';
-import { defineComponent, onMounted, ref } from 'vue';
+import ScheduleLesson from '@/components/Timetable/ScheduleLesson.vue';
+import Data from '@/data/functions/Data';
+import type { callData } from '@/data/types';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 export default defineComponent({
     components: {
-        TimeSpan
+        Call,
+        TimeSpan, ScheduleLesson
     },
     setup() {
-        const scheduleData = ref<schedule>({ generated: false });
+        const route = useRoute();
+        const callsData = ref<callData[]>();
+        const dayId: number = parseInt(route.params.dayId as string) || 1;
 
         onMounted(async () => {
             try {
-                scheduleData.value = await getSchedule();
+                fetchCalls()
             } catch (error) {
                 console.error('Error fetching schedule data:', error);
             }
         });
 
+        const fetchCalls = async () => {
+            try {
+                const res: callData[] = await Data.getCalls(dayId);
+                callsData.value = res;
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        watch(() => parseInt(route.params.dayId as string), (newDayId) => {
+            fetchCalls()
+        })
+
         return {
-            schedule: scheduleData,
+            calls: callsData,
         };
     },
 })
 </script>
-<style scoped></style>
+<style scoped>
+html.mobile {
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+}
+</style>

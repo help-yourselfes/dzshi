@@ -1,0 +1,16 @@
+{
+  "days": [1, 2, 3, 4, 5],
+  "startTime": "08:00",
+  "lessons": {
+    "length": 45,
+    "count": 8
+  },
+  "break": {
+    "length": 10
+  },
+  "bigBreak": {
+    "enabled": true,
+    "afterLessons": [4],
+    "length": 25
+  }
+}
