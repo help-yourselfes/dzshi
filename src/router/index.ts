@@ -6,8 +6,8 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: TasksView },
-  { path: '/calls', component: CallsView },
-  {path: '/timetable', component: TimetableView},
+  { path: '/calls/:dayId?', component: CallsView },
+  { path: '/timetable', component: TimetableView },
   { path: '/about', component: AboutView },
 ]
 
