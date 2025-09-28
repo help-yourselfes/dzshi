@@ -1,23 +1,20 @@
 <template>
-    <RouterLink :to="to" class="nav-button">
-        <span v-if="$slots.icon" class="nav-button__icon">
-            <slot name="icon"></slot>
-        </span>
-        <span class="nav-button__text">
-            <slot></slot>
-        </span>
-    </RouterLink>
+  <RouterLink :to="to" class="nav-button">
+    <span v-if="$slots.icon" class="nav-button__icon">
+      <slot name="icon" />
+    </span>
+    <span class="nav-button__text">
+      <slot />
+    </span>
+  </RouterLink>
 </template>
 
-<script>
-export default {
-    props: {
-        to: {
-            type: [String, Object],
-            required: true
-        }
-    }
-}
+<script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router';
+
+const props = defineProps<{
+  to: RouteLocationRaw;
+}>();
 </script>
 
 <style scoped>
@@ -41,6 +38,7 @@ export default {
 }
 
 .nav-button__icon {
+    height: 100%;
     display: flex;
     align-items: center;
 }

@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount } from 'vue';
-import NavBar from './components/NavBar.vue';
+import NavBar from './components/NavBar/NavBar.vue';
+import { useRoute } from 'vue-router';
 
 function updateViewportClass() {
-  if (window.innerWidth < 700) {
+  if (window.innerWidth < 768) {
     document.documentElement.classList.add('mobile');
   } else {
     document.documentElement.classList.remove('mobile');
   }
 }
+
+const route = useRoute()
 
 onMounted(() => {
   window.addEventListener('resize', updateViewportClass);
@@ -23,6 +26,7 @@ onBeforeUnmount(() => {
 <template>
   <NavBar />
   <div class="view">
+    {{  route.name }}
     <RouterView />
   </div>
 </template>
@@ -30,7 +34,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .view {
   padding: 0.65rem;
-  padding-top: 3rem;
+  padding-top: 4rem;
   min-height: 100vh;
   min-width: 100vw;
 }
