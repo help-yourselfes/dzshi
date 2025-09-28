@@ -1,11 +1,6 @@
 <template>
   <RouterLink :to="to" class="nav-button">
-    <span v-if="$slots.icon" class="nav-button__icon">
-      <slot name="icon" />
-    </span>
-    <span class="nav-button__text">
       <slot />
-    </span>
   </RouterLink>
 </template>
 

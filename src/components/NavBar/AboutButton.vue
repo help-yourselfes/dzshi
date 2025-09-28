@@ -1,7 +1,6 @@
 <template>
     <RouterLink to="/about" class="about-button nav-button">
         <LogoIcon class="about-button__icon"></LogoIcon>
-        
     </RouterLink>
 </template>
 

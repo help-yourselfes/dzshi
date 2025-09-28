@@ -5,14 +5,16 @@
 
         <ViewSelector v-if="isMobile">
             <template #selected>
-                
+                <TasksText v-if="path === '/'" />
+                <CallsText v-else-if="path === '/calls'" />
+
             </template>
 
             <template #values>
-                <NavBarChoices />
+                <NavBarChoices/>
             </template>
         </ViewSelector>
-        <NavBarChoices v-else />
+        <NavBarChoices v-else/>
     </nav>
 </template>
 
@@ -28,6 +30,9 @@ import ViewSelector from './ViewSelector.vue';
 import { useRoute } from 'vue-router';
 import { computed, watch } from 'vue';
 import NavBarChoices from './NavBarChoices.vue';
+import NavButtonText from './NavButtonText.vue';
+import CallsText from './CallsText.vue';
+import TasksText from './TasksText.vue';
 
 const isMobile = computed(() => state.isMobile);
 const route = useRoute()
