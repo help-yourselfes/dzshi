@@ -51,7 +51,7 @@ defineSlots<{
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
+  right: 0;
   background-color: white;
   border: 1px solid #ccc;
   z-index: 20;
