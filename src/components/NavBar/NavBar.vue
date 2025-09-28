@@ -56,7 +56,8 @@ html.mobile .nav-bar {
     width: 100vw;
     top: 0;
     left: 0;
-    padding:  1rem;
+    padding: 1rem;
+    padding-left: 0.5rem;
     backdrop-filter: blur(8px);
     justify-content: space-between;
 }

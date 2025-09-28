@@ -16,7 +16,8 @@ const props = defineProps<{
 .nav-button {
     display: flex;
     align-items: center;
-    gap: 0.1rem;
+    gap: 0.5rem;
+    
     padding: 0.5rem 1rem;
     border-radius: 1rem;
     text-decoration: none;

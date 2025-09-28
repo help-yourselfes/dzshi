@@ -2,14 +2,10 @@
   <div class="dropdown">
     <button class="dropdown-button" @click="toggleDropdown">
       <slot name="selected" />
+      <DropdownArrowIcon :is-opended="isOpen" />
     </button>
 
-    <transition
-      name="dropdown"
-      @enter="onEnter"
-      @after-enter="onAfterEnter"
-      @leave="onLeave"
-    >
+    <transition name="dropdown">
       <div v-if="isOpen" class="dropdown-menu">
         <slot name="values" />
       </div>
@@ -18,44 +14,21 @@
 </template>
 
 <script setup lang="ts">
+import DropdownArrowIcon from '@/icons/DropdownArrowIcon.vue';
 import { ref } from 'vue';
 
+let timer = 0;
 const isOpen = ref(false);
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
-};
 
-const onEnter = (el: Element) => {
-  const element = el as HTMLElement;
-  element.style.height = '0';
-  element.style.opacity = '0';
-  
-  requestAnimationFrame(() => {
-    element.style.transition = 'height 0.3s ease, opacity 0.2s ease 0.1s';
-    element.style.height = `${element.scrollHeight}px`;
-    element.style.opacity = '1';
-  });
-};
-
-// Финализация появления
-const onAfterEnter = (el: Element) => {
-  const element = el as HTMLElement;
-  element.style.height = 'auto';
-  element.style.transition = '';
-};
-
-// Анимация скрытия
-const onLeave = (el: Element) => {
-  const element = el as HTMLElement;
-  element.style.height = `${element.scrollHeight}px`;
-  element.style.opacity = '1';
-  
-  requestAnimationFrame(() => {
-    element.style.transition = 'height 0.3s ease, opacity 0.2s ease';
-    element.style.height = '0';
-    element.style.opacity = '0';
-  });
+  if (isOpen.value) {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      isOpen.value = false
+    }, 2 * 1000)
+  }
 };
 
 defineSlots<{
@@ -64,14 +37,24 @@ defineSlots<{
 }>();
 </script>
 
-<style scoped>
+<style>
 .dropdown {
   position: relative;
   display: inline-block;
+  min-width: 9rem;
+}
+
+.dropdown-arrow {
+  height: 1rem;
+  transition: rotate 300ms ease;
+}
+
+.dropdown-arrow.open {
+  rotate: -180deg;
 }
 
 .dropdown-button {
-  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  padding: 0.5rem;
   border-radius: 2rem;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
@@ -80,28 +63,50 @@ defineSlots<{
   align-items: center;
   flex-direction: row;
   gap: 0.5rem;
+  transition: all 100ms;
+  width: 100%;
+  justify-content: space-between;
 }
 
+.dropdown-button:active {
+  scale: 0.9;
+}
+
+
 .dropdown-menu {
+  width: 100%;
   position: absolute;
-  top: 100%;
-  right: 0;
+  top: calc(100% + 0.5rem);
   background-color: white;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 20;
   overflow: hidden;
+  transform-origin: 50% 0%;
 }
 
-.dropdown-enter-active,
-.dropdown-leave-active {
+.dropdown-enter-active {
   transition: all 0.3s ease;
+}
+
+.dropdown-leave-active {
+  transition: 0.3s all cubic-bezier(.6, -0.28, .74, .05);
+}
+
+.dropdown-enter-from {
+  opacity: 0;
+  transform: translateY(-2rem);
 }
 
 .dropdown-enter-from,
 .dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
+  transform: scale(0.8, 0);
+}
+
+.nav-button {
+  width: 100% !important;
+  justify-content: space-between;
+  padding: 0.5rem 1rem 0.5rem 0.5rem !important;
 }
 </style>

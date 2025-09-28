@@ -4,8 +4,9 @@
 html {
   --background:  white;
   --text: black;
-  --accent: blue;
+  --accent: #FFA000;
   --font: 'Roboto'
+
 }
 
 * {
