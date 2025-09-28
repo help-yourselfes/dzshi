@@ -17,12 +17,12 @@
 </template>
 
 <script lang="ts">
-import type { day } from '@/data/types';
+import type { dayData } from '@/data/types';
 
 export default {
     props: {
         day: {
-            type: Object as () => day,
+            type: Object as () => dayData,
             required: true,
         },
     },

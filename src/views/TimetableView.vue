@@ -10,7 +10,6 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import type { week } from '@/data/types';
-import TimeTable from '@/data/functions/timetable';
 import ScheduleDay from '@/components/Timetable/ScheduleDay.vue';
 
 export default defineComponent({
@@ -22,7 +21,6 @@ export default defineComponent({
 
         onMounted(async () => {
             try {
-                weekData.value = await TimeTable.getWeek();
             } catch (error) {
                 console.error('Error fetching week data:', error);
             }

@@ -23,11 +23,28 @@ type lessonData = {
   class: string | string[]
 }
 
-type day = {
+type dayInfo = {
+  number: number,
+  name: string,
+  'short-name': string
+}
+
+type dayData = {
   name: string
   length: number
   lessons: lessonData[]
 }
+
+type abstractCall = {
+  start: time,
+  end: time
+}
+
+type callData = (
+  { type: 'lesson', name: string } |
+  { type: 'break'} |
+  { type: 'big-break' } 
+) & abstractCall;
 
 type schedulePrefs = {
   days: number[]
@@ -40,17 +57,17 @@ type schedulePrefs = {
     length: number
   }
   bigBreak:
-    | {
-        enabled: true
-        afterLessons: number[]
-        length: number
-      }
-    | {
-        enabled: false
-      }
+  | {
+    enabled: true
+    afterLessons: number[]
+    length: number
+  }
+  | {
+    enabled: false
+  }
 }
 
-type week = day[]
+type week = dayData[]
 
-export type { dayNumber, lessonData, day, week, schedulePrefs, period, time }
+export type { dayNumber, lessonData, dayData, week, schedulePrefs, period, time, dayInfo, callData }
 export { dataPath }

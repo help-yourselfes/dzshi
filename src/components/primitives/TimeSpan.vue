@@ -1,21 +1,12 @@
 <template>
     <span :time="time">
-        <span v-if="time.h < 10">
-            0{{ time.h }}
-        </span>
-        <span v-else>
-            {{ time.h }}
-        </span>{{ delim }}<span v-if="time.m < 10">
-            0{{ time.m }}
-        </span>
-        <span v-else>
-            {{ time.m }}
-        </span>
+        {{ formattedTime }}
     </span>
 </template>
 
 <script lang="ts">
 import type { time } from '@/data/types';
+import { computed } from 'vue';
 
 export default {
     props: {
@@ -28,6 +19,15 @@ export default {
             default: ':',
             required: false
         }
+    },
+    setup(props) {
+        const formatTime = (num: number) => (num < 10 ? `0${num}` : num.toString());
+
+        const formattedTime = computed(() => {
+            return `${formatTime(props.time.h)}${props.delim}${formatTime(props.time.m)}`;
+        });
+
+        return { formattedTime };
     }
 }
 </script>

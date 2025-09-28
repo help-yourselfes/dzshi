@@ -92,7 +92,7 @@ const Data = {
                 })
                 if (lessonNumber >= dayPrefs.lessons.length - 1) return
                 if (callsPrefs.bigBreak.enabled) {
-                    if (callsPrefs.bigBreak.afterLessons.includes(lessonNumber)) {
+                    if (callsPrefs.bigBreak.afterLessons.includes(lessonNumber + 1)) {
                         calls.push({
                             type: 'big-break',
                             start: currentTime,
