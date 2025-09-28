@@ -1,6 +1,6 @@
 <template>
     <nav class="nav-bar">
-        
+
         <AboutButton></AboutButton>
 
         <ViewSelector v-if="isMobile">
@@ -10,10 +10,10 @@
             </template>
 
             <template #values>
-                <NavBarChoices/>
+                <NavBarChoices />
             </template>
         </ViewSelector>
-        <NavBarChoices v-else/>
+        <NavBarChoices v-else />
     </nav>
 </template>
 
@@ -43,7 +43,8 @@ const path = computed(() => route.path);
     position: fixed;
     top: 1rem;
     left: 1rem;
-
+    height: 4rem;
+    align-items: center;
     display: flex;
     flex-direction: row;
     gap: 0.2rem;
@@ -55,7 +56,7 @@ html.mobile .nav-bar {
     width: 100vw;
     top: 0;
     left: 0;
-    padding: 0.5rem;
+    padding:  1rem;
     backdrop-filter: blur(8px);
     justify-content: space-between;
 }

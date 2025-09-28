@@ -1,5 +1,5 @@
 <template>
-  <RouterLink :to="to" class="nav-button">
+  <RouterLink :to="to" class="nav-button ">
       <slot />
   </RouterLink>
 </template>

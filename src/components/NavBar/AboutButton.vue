@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import { RouterLink } from 'vue-router';
-import NavButton from './NavButton.vue';
 import LogoIcon from '@/icons/LogoIcon.vue';
 
 export default {
