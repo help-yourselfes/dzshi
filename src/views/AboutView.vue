@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import IconText from '@/components/NavBar/IconText.vue';
+import AboutTool from '@/components/AboutTool.vue';
 import NavBarChoices from '@/components/NavBar/NavBarChoices.vue';
 import LogoIcon from '@/icons/LogoIcon.vue';
+import TSIcon from '@/icons/tools/TSIcon.vue';
+import ViteIcon from '@/icons/tools/ViteIcon.vue';
+import VueIcon from '@/icons/tools/VueIcon.vue';
 
 </script>
 
@@ -15,15 +18,24 @@ import LogoIcon from '@/icons/LogoIcon.vue';
     </div>
 
     <div class="tools">
-        <p>
-            Написана на Vue.js
-        </p>
-        <p>
-            с использованием TypeScript
-        </p>
-        <p>
-            и сборкой через Vite
-        </p>
+        <AboutTool>
+            Написана на
+            <template #icon>
+                <VueIcon /> Vue.js
+            </template>
+        </AboutTool>
+        <AboutTool>
+            с использованием
+            <template #icon>
+                <TSIcon /> TypeScript
+            </template>
+        </AboutTool>
+        <AboutTool>
+            и сборкой через
+            <template #icon>
+                <ViteIcon /> Vite
+            </template>
+        </AboutTool>
     </div>
 </template>
 
@@ -74,5 +86,6 @@ import LogoIcon from '@/icons/LogoIcon.vue';
     margin-top: 30%;
     font-size: 1rem;
 
+    gap: 0.5rem;
 }
 </style>

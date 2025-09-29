@@ -1,3 +1,3 @@
 <template>
-    <img src="/public/icons/vue.png" />
+    <img src="./vue.png" class="icon"/>
 </template>
