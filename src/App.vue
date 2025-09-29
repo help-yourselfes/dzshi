@@ -24,9 +24,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <NavBar />
-  <div class="view">
-    {{  route.name }}
+  <NavBar v-if="route.path !== '/about'" />
+  <div class="view" :class="route.path === '/about' ? 'about-view' : ''">
     <RouterView />
   </div>
 </template>
@@ -37,6 +36,10 @@ onBeforeUnmount(() => {
   padding-top: 4rem;
   min-height: 100vh;
   min-width: 100vw;
+}
+
+.about-view {
+  padding-top: 0.65rem;
 }
 
 html.mobile .view {}

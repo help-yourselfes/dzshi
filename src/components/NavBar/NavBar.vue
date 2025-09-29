@@ -7,6 +7,10 @@
             <template #selected>
                 <TasksText v-if="path === '/'" />
                 <CallsText v-else-if="path === '/calls'" />
+                <RouterLink to="/" v-else>
+                    <UnknownIcon />
+                    К главной
+                </RouterLink>
             </template>
 
             <template #values>
@@ -27,6 +31,7 @@ import { computed, watch } from 'vue';
 import NavBarChoices from './NavBarChoices.vue';
 import CallsText from './CallsText.vue';
 import TasksText from './TasksText.vue';
+import UnknownIcon from '@/icons/UnknownIcon.vue';
 
 const isMobile = computed(() => state.isMobile);
 const route = useRoute()

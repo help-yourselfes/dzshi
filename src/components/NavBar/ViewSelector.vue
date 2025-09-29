@@ -30,11 +30,6 @@ const toggleDropdown = () => {
     }, 2 * 1000)
   }
 };
-
-defineSlots<{
-  selected: { selected: string };
-  values: { select: (item: { label: string }) => void };
-}>();
 </script>
 
 <style>
