@@ -1,0 +1,32 @@
+<template>
+    <div class="days-container">
+        <DayButton v-for="day in days" :day="day" :selected="selectedDay"/>
+    </div>
+</template>
+
+<script setup lang="ts">
+import Data from '@/data/functions/Data';
+import type { dayInfo } from '@/data/types';
+import { onMounted, ref } from 'vue';
+import DayButton from './DayButton.vue';
+
+const days = ref<dayInfo[]>();
+const selectedDay = ref<dayInfo>();
+
+const getDays = async () => {
+    days.value = await Data.getAviableDays();
+    if (!selectedDay.value) {
+        selectedDay.value = days.value[0]
+    }
+}
+
+const setDay = (newDayId: number) => {
+    if (!days.value) return
+    selectedDay.value = days.value[newDayId];
+}
+
+onMounted(() => {
+    getDays();
+})
+
+</script>

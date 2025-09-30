@@ -52,6 +52,7 @@ const path = computed(() => route.path);
     flex-direction: row;
     gap: 0.2rem;
     width: max-content;
+    box-shadow: 0 0 0 0 black;
 }
 
 html.mobile .nav-bar {

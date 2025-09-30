@@ -1,5 +1,6 @@
 <template>
     <div>
+        <DaySelect />
         <div v-if="calls" class="list">
             <Call v-for="(call, index) in calls" :call="call" :key="index"></Call>
         </div>
@@ -11,13 +12,14 @@
 
 <script lang="ts">
 import Call from '@/components/Calls/Call.vue';
+import DaySelect from '@/components/dayChoice/DaySelect.vue';
 import Data from '@/data/functions/Data';
 import type { callData } from '@/data/types';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 export default defineComponent({
     components: {
-        Call
+        Call, DaySelect
     },
     setup() {
         const route = useRoute();
