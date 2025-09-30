@@ -9,56 +9,84 @@ import VueIcon from '@/icons/tools/VueIcon.vue';
 </script>
 
 <template>
-    <div class="title">
-        <LogoIcon class="logo" />
-        Небольшая статичная страничка с расписанием и домашними заданиями
+    <div class="main-info">
+        <div class="title">
+            <LogoIcon class="logo" />
+            Небольшая статичная<br />
+            страничка с расписанием и<br />
+            домашними заданиями
+        </div>
     </div>
-    <div class="links">
-        <NavBarChoices />
-    </div>
-
-    <div class="tools">
-        <AboutTool>
-            Написана на
-            <template #icon>
-                <VueIcon /> Vue.js
-            </template>
-        </AboutTool>
-        <AboutTool>
-            с использованием
-            <template #icon>
-                <TSIcon /> TypeScript
-            </template>
-        </AboutTool>
-        <AboutTool>
-            и сборкой через
-            <template #icon>
-                <ViteIcon /> Vite
-            </template>
-        </AboutTool>
+    <div class="add-info">
+        <div class="links">
+            <NavBarChoices />
+        </div>
+        <div class="tools">
+            <AboutTool>
+                Написана на
+                <template #icon>
+                    <VueIcon /> Vue.js
+                </template>
+            </AboutTool>
+            <AboutTool>
+                с использованием
+                <template #icon>
+                    <TSIcon /> TypeScript
+                </template>
+            </AboutTool>
+            <AboutTool>
+                и сборкой через
+                <template #icon>
+                    <ViteIcon /> Vite
+                </template>
+            </AboutTool>
+        </div>
     </div>
 </template>
 
 <style>
 .about-view {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+
+
+    .nav-button {
+        padding: 0.5rem 1rem;   
+        background-color: lightgray;
+    }
+
+    .nav-button:hover {
+        scale: 1.05;
+    }
 }
 
-.nav-button {
-    padding: 1rem;
-    background-color: lightgray;
+html.mobile {
+    .about-view {
+        gap: 0;
+        flex-direction: column;
+    }
 }
 </style>
 
 <style scoped>
+.main-info,
+.add-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .logo {
     height: 5rem;
     margin-bottom: 1.5rem;
 }
+
+
 
 .title,
 .tools {
@@ -83,9 +111,14 @@ import VueIcon from '@/icons/tools/VueIcon.vue';
 }
 
 .tools {
-    margin-top: 30%;
     font-size: 1rem;
-
+    margin-top: 2rem;
     gap: 0.5rem;
+}
+
+html.mobile {
+    .tools {
+        margin-top: 30%;
+    }
 }
 </style>

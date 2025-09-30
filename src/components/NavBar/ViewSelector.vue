@@ -32,7 +32,7 @@ const toggleDropdown = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .dropdown {
   position: relative;
   display: inline-block;
@@ -97,11 +97,5 @@ const toggleDropdown = () => {
 .dropdown-enter-from,
 .dropdown-leave-to {
   transform: scale(0.8, 0);
-}
-
-.nav-button {
-  width: 100% !important;
-  justify-content: space-between;
-  padding: 0.5rem 1rem 0.5rem 0.5rem !important;
 }
 </style>
