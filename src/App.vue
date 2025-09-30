@@ -40,17 +40,19 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+
+
 .view {
   padding: 1rem;
-  padding-top: 4%;
+  padding-top:6rem;
+  min-height: 100vh;
+  min-width: 100vw;
 }
 
 html.mobile {
   .view {
     padding: 0.65rem;
     padding-top: 4rem;
-    min-height: 100vh;
-    min-width: 100vw;
   }
   
   .about-view {

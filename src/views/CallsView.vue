@@ -1,12 +1,10 @@
 <template>
-    <div>
         <div v-if="calls" class="list">
             <Call v-for="(call, index) in calls" :call="call" :key="index"></Call>
         </div>
         <div v-else>
             Загружаю ...
         </div>
-    </div>
 </template>
 
 <script lang="ts">

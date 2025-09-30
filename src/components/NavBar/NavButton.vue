@@ -19,12 +19,11 @@ const props = defineProps<{
     gap: 0.5rem;
     
     padding: 0.5rem 1rem;
-    border-radius: 1rem;
+    border-radius: 999px;
     text-decoration: none;
     color: inherit;
     transition: all 0.2s ease;
-    backdrop-filter: blur(2px);
-    background: rgba(255, 255, 255, 0.5);
+
     width: max-content;
 }
 
