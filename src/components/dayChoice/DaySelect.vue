@@ -30,3 +30,18 @@ onMounted(() => {
 })
 
 </script>
+
+<style scoped>
+.days-container {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+
+html.mobile {
+    .days-container {
+        width: 100%;
+        justify-content: space-around  ;
+    }
+}
+</style>

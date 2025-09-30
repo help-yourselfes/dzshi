@@ -1,6 +1,6 @@
 <template>
-    <RouterLink class="day-button" :to="`/calls/${day.number}`" @click="handleClick">
-        <span v-if="day === selected">
+    <RouterLink class="day-button" :class="current ? 'current' : ''" :to="`/calls/${day.number}`" @click="handleClick">
+        <span v-if="current">
             {{ fullName }}
 
         </span>
@@ -31,10 +31,29 @@ const emit = defineEmits<{
 
 const handleClick = () => {
     emit("update", props.day.number)
-    console.log('button clicks:', fullName.value)
 }
 
 const shortName = computed(() => props.day['short-name'])
 const fullName = computed(() => props.day.name)
+const current = computed(() => props.day === props.selected)
 
 </script>
+
+<style scoped>
+.day-button {
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: all 300ms;
+    border-radius: 999px;
+    color: gray;
+}
+
+.current {
+    background-color: lightgray;
+    color: black;
+    height: 3rem;
+    display: inline-flex;
+    padding: 0 2rem;
+    align-items: center;
+}
+</style>
