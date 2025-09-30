@@ -24,7 +24,7 @@ export default defineComponent({
     setup() {
         const route = useRoute();
         const callsData = ref<callData[]>();
-        const dayId: number = parseInt(route.params.dayId as string) || 1;
+        const dayId = ref<number>(parseInt(route.params.dayId as string) || 1);
 
         onMounted(async () => {
             try {
@@ -36,14 +36,16 @@ export default defineComponent({
 
         const fetchCalls = async () => {
             try {
-                const res: callData[] = await Data.getCalls(dayId);
+                const res: callData[] = await Data.getCalls(dayId.value);
+                console.log(res)
                 callsData.value = res;
             } catch (error) {
                 console.error(error)
             }
         }
-
+        
         watch(() => parseInt(route.params.dayId as string), (newDayId) => {
+            dayId.value = newDayId;
             fetchCalls()
         })
 

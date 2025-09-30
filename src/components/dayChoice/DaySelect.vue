@@ -1,6 +1,6 @@
 <template>
     <div class="days-container">
-        <DayButton v-for="day in days" :day="day" :selected="selectedDay"/>
+        <DayButton v-for="day in days" :day="day" :key="day.number" :selected="selectedDay" @update="setDay"/>
     </div>
 </template>
 
@@ -22,7 +22,7 @@ const getDays = async () => {
 
 const setDay = (newDayId: number) => {
     if (!days.value) return
-    selectedDay.value = days.value[newDayId];
+    selectedDay.value = days.value.find(d => d.number === newDayId);
 }
 
 onMounted(() => {
