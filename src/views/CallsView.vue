@@ -13,7 +13,7 @@
 <script lang="ts">
 import Call from '@/components/Calls/Call.vue';
 import DaySelect from '@/components/dayChoice/DaySelect.vue';
-import Data from '@/data/functions/Data';
+import api from '@/data/functions/Api';
 import type { callData } from '@/data/types';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -36,7 +36,7 @@ export default defineComponent({
 
         const fetchCalls = async () => {
             try {
-                const res: callData[] = await Data.getCalls(dayId.value);
+                const res: callData[] = await api.getCalls(dayId.value);
                 console.log(res)
                 callsData.value = res;
             } catch (error) {

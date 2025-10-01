@@ -2,7 +2,7 @@ import type { callData, dayData, schedulePrefs, time } from "../types";
 import { addTime, parseHHMM } from "./time";
 
 
-const Generator = {
+const generator = {
     generateCalls: (callsPrefs: schedulePrefs, dayPrefs: dayData): callData[] => {
         function mutateTime(minutes: number) {
             currentTime = addTime(currentTime, minutes);
@@ -44,4 +44,4 @@ const Generator = {
     }
 }
 
-export default Generator;
+export default generator;

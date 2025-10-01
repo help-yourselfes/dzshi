@@ -1,7 +1,7 @@
 import type { callData, dayData, dayInfo, period, schedulePrefs, time } from "../types"
 import { dataPath } from "../types";
-import Generator from "./Generator";
-import { addTime, parseHHMM } from "./time";
+import generator from "./Generator";
+import storage from "./Storage";
 
 const cache = {
     languageData: {
@@ -21,11 +21,10 @@ const cache = {
     }
 }
 
-const Data = {
+const api = {
     getCallsPrefs: async () => {
         if (!cache.loadState.callsPrefs) {
-            const res = await fetch(`${dataPath}/json/callsPrefs.json`);
-            cache.callsPrefs = await res.json();
+            cache.callsPrefs = await storage.getCallsPrefs();;
             cache.loadState.callsPrefs = true;
         }
         return cache.callsPrefs;
@@ -33,9 +32,7 @@ const Data = {
 
     getDayPrefs: async (dayId: number) => {
         if (!cache.dayPrefs[dayId]) {
-            const res = await fetch(`${dataPath}/json/days/${dayId}.json`);
-            const data = await res.json();
-            cache.dayPrefs[dayId] = data;
+            cache.dayPrefs[dayId] = await storage.getDayPrefs(dayId);
         }
         return cache.dayPrefs[dayId]
     },
@@ -53,8 +50,8 @@ const Data = {
     getAviableDays: async () => {
         if (!cache.loadState.aviableDays) {
             try {
-                const callsPrefs = await Data.getCallsPrefs();
-                const language = await Data.getLanguage();
+                const callsPrefs = await api.getCallsPrefs();
+                const language = await api.getLanguage();
 
                 cache.aviableDays = language.days.filter((v) => callsPrefs.days.includes(v.number));
                 cache.loadState.aviableDays = true;
@@ -66,15 +63,15 @@ const Data = {
     },
 
     getCalls: async (dayId: number): Promise<callData[]> => {
-        const days = await Data.getAviableDays();
+        const days = await api.getAviableDays();
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
             rej(`That day is not aviable: ${dayId}\nAviable days: ${days}`)
         )
         if (!cache.combinedCalls[dayId]) {
-            const callsPrefs = await Data.getCallsPrefs();
-            const dayPrefs = await Data.getDayPrefs(dayId);
+            const callsPrefs = await api.getCallsPrefs();
+            const dayPrefs = await api.getDayPrefs(dayId);
 
-            const calls = Generator.generateCalls(callsPrefs, dayPrefs);
+            const calls = generator.generateCalls(callsPrefs, dayPrefs);
 
             cache.combinedCalls[dayId] = calls;
         }
@@ -87,4 +84,4 @@ const Data = {
     }
 }
 
-export default Data;
+export default api;

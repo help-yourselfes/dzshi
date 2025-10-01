@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import Data from '@/data/functions/Data';
+import api from '@/data/functions/Api';
 import type { dayInfo } from '@/data/types';
 import { onMounted, ref } from 'vue';
 import DayButton from './DayButton.vue';
@@ -14,7 +14,7 @@ const days = ref<dayInfo[]>();
 const selectedDay = ref<dayInfo>();
 
 const getDays = async () => {
-    days.value = await Data.getAviableDays();
+    days.value = await api.getAviableDays();
     if (!selectedDay.value) {
         selectedDay.value = days.value[0]
     }
