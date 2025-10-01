@@ -8,7 +8,7 @@
     </main>
 </template>
 <script lang="ts">
-import type { callData } from '@/data/types';
+import type { callInfo } from '@/data/types';
 import TimeSpan from '../primitives/TimeSpan.vue';
 
 export default {
@@ -18,7 +18,7 @@ export default {
     props: {
         call: {
             required: true,
-            type: Object as () => callData
+            type: Object as () => callInfo
         },
         isAvctive: {
             required: false,

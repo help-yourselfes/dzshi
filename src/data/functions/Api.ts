@@ -1,19 +1,16 @@
-import type { callData, dayData, dayInfo, period, schedulePrefs, time } from "../types"
-import { dataPath } from "../types";
+import type { callInfo, dayData, dayInfo, period, callsPrefs, time } from "../types"
 import generator from "./Generator";
-import storage from "./Storage";
+import Storage from "./Storage";
 
 const cache = {
-    languageData: {
-        days: [] as dayInfo[]
-    },
-    callsPrefs: {} as schedulePrefs,
+    daysInfo: [] as dayInfo[],
+    callsPrefs: {} as callsPrefs,
     dayPrefs: {} as Record<number, dayData>,
     aviableDays: [] as dayInfo[],
-    combinedCalls: {} as Record<number, callData[]>,
+    combinedCalls: {} as Record<number, callInfo[]>,
 
     loadState: {
-        languageData: false,
+        daysInfo: false,
         callsPrefs: false,
         dayPrefs: false,
         aviableDays: false,
@@ -24,7 +21,7 @@ const cache = {
 const api = {
     getCallsPrefs: async () => {
         if (!cache.loadState.callsPrefs) {
-            cache.callsPrefs = await storage.getCallsPrefs();;
+            cache.callsPrefs = await Storage.getCallsPrefs();;
             cache.loadState.callsPrefs = true;
         }
         return cache.callsPrefs;
@@ -32,28 +29,25 @@ const api = {
 
     getDayPrefs: async (dayId: number) => {
         if (!cache.dayPrefs[dayId]) {
-            cache.dayPrefs[dayId] = await storage.getDayPrefs(dayId);
+            cache.dayPrefs[dayId] = await Storage.getDayPrefs(dayId);
         }
         return cache.dayPrefs[dayId]
     },
-
-    getLanguage: async () => {
-        if (!cache.loadState.languageData) {
-            const res = await fetch(`${dataPath}/json/language.json`);
-            const data = await res.json();
-            cache.languageData = data;
-            cache.loadState.languageData = true;
+    getDaysInfo: async () => {
+        if (!cache.daysInfo.length) {
+            const data = await Storage.getDaysInfo();
+            cache.daysInfo = data;
         }
-        return cache.languageData
+        return cache.daysInfo
     },
 
     getAviableDays: async () => {
         if (!cache.loadState.aviableDays) {
             try {
                 const callsPrefs = await api.getCallsPrefs();
-                const language = await api.getLanguage();
-
-                cache.aviableDays = language.days.filter((v) => callsPrefs.days.includes(v.number));
+                const days = await api.getDaysInfo();
+                
+                cache.aviableDays = days.filter((v) => callsPrefs.days.includes(v.number));
                 cache.loadState.aviableDays = true;
             } catch (e) {
                 console.error('Error while getting aviable days: ', e);
@@ -62,7 +56,7 @@ const api = {
         return cache.aviableDays
     },
 
-    getCalls: async (dayId: number): Promise<callData[]> => {
+    getCalls: async (dayId: number): Promise<callInfo[]> => {
         const days = await api.getAviableDays();
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
             rej(`That day is not aviable: ${dayId}\nAviable days: ${days}`)

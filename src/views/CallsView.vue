@@ -14,7 +14,7 @@
 import Call from '@/components/Calls/Call.vue';
 import DaySelect from '@/components/dayChoice/DaySelect.vue';
 import api from '@/data/functions/Api';
-import type { callData } from '@/data/types';
+import type { callInfo } from '@/data/types';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 export default defineComponent({
@@ -23,8 +23,8 @@ export default defineComponent({
     },
     setup() {
         const route = useRoute();
-        const callsData = ref<callData[]>();
-        const dayId = ref<number>(parseInt(route.params.dayId as string) || 1);
+        const callsData = ref<callInfo[]>();
+        const dayId = ref<number>(1);
 
         onMounted(async () => {
             try {
@@ -32,20 +32,24 @@ export default defineComponent({
             } catch (error) {
                 console.error('Error fetching schedule data:', error);
             }
+            updateDayId(parseInt(route.params.dayId as string) || 1);
         });
 
         const fetchCalls = async () => {
             try {
-                const res: callData[] = await api.getCalls(dayId.value);
-                console.log(res)
+                const res: callInfo[] = await api.getCalls(dayId.value);
                 callsData.value = res;
             } catch (error) {
                 console.error(error)
             }
         }
 
-        watch(() => parseInt(route.params.dayId as string), (newDayId) => {
+        const updateDayId = (newDayId: number) => {
             dayId.value = newDayId;
+        }
+
+        watch(() => parseInt(route.params.dayId as string), (newDayId) => {
+            updateDayId(newDayId);
             fetchCalls()
         })
 

@@ -1,14 +1,14 @@
-import type { callData, dayData, schedulePrefs, time } from "../types";
+import type { callInfo, dayData, callsPrefs, time } from "../types";
 import { addTime, parseHHMM } from "./time";
 
 
 const generator = {
-    generateCalls: (callsPrefs: schedulePrefs, dayPrefs: dayData): callData[] => {
+    generateCalls: (callsPrefs: callsPrefs, dayPrefs: dayData): callInfo[] => {
         function mutateTime(minutes: number) {
             currentTime = addTime(currentTime, minutes);
             return currentTime
         }
-        const calls: callData[] = [];
+        const calls: callInfo[] = [];
 
         const lessonLength = callsPrefs.lessons.length;
         const breakLength = callsPrefs.break.length;

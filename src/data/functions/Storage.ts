@@ -1,11 +1,12 @@
-import type { dayData, schedulePrefs } from "../types"
+import type { dayData, dayInfo, callsPrefs } from "../types"
 
-type storage = {
-    getCallsPrefs: () => Promise<schedulePrefs>
+type Storage = {
+    getCallsPrefs: () => Promise<callsPrefs>
     getDayPrefs: (dayId: number) => Promise<dayData>
+    getDaysInfo: () => Promise<dayInfo[]>
 }
 
-type GithubStorage = storage & {
+type GithubStorage = Storage & {
     path: {
         user: string,
         repo: string,
@@ -14,7 +15,7 @@ type GithubStorage = storage & {
     getPath: () => string
 }
 
-const storage: GithubStorage = {
+const Storage: GithubStorage = {
     path: {
         user: 'help-yourselfes',
         repo: 'dzshi-data',
@@ -22,8 +23,7 @@ const storage: GithubStorage = {
     },
     getPath() {
         const { user, repo, branch } = this.path;
-        const path: string = `https://raw.githubusercontent/${user}/${repo}/${branch}/`;
-        return path;
+        return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/`
     },
     async getCallsPrefs() {
         const path = this.getPath();
@@ -58,7 +58,23 @@ const storage: GithubStorage = {
                 return new Promise((_, rej) => rej('Unknown error'))
             }
         }
-
+    },
+    async getDaysInfo() {
+        const path = this.getPath();
+        try {
+            const res = await fetch(path + `days/dayList.json`);
+            const data = await res.json();
+            return data.days;
+        } catch (e) {
+            if (e instanceof Error) {
+                const msg = e.message;
+                console.error(msg)
+                return new Promise((_, rej) => rej(msg))
+            } else {
+                console.error('Unknown error: ', e);
+                return new Promise((_, rej) => rej('Unknown error'))
+            }
+        }
     },
 }
-export default storage
+export default Storage
