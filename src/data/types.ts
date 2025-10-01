@@ -1,4 +1,19 @@
-const dataPath = '/src/data'
+/*
+
+Name specifications:
+
+  Prefs:
+    contains Object preferences
+  Info:
+    contains data about Object itself
+  Data:
+    contains data that Object is store
+
+  Calls:
+    contains time range
+  
+
+*/
 
 type dayNumber = 1 | 2 | 3 | 4 | 5
 
@@ -16,7 +31,7 @@ type time = {
   m: number
 }
 
-type lessonData = {
+type lessonInfo = {
   name: string
   'short-name'?: string
   necessary?: boolean
@@ -32,7 +47,7 @@ type dayInfo = {
 type dayData = {
   name: string
   length: number
-  lessons: lessonData[]
+  lessons: lessonInfo[]
 }
 
 type abstractCall = {
@@ -40,13 +55,13 @@ type abstractCall = {
   end: time
 }
 
-type callData = (
+type callInfo = (
   { type: 'lesson', name: string } |
   { type: 'break'} |
   { type: 'big-break' } 
 ) & abstractCall;
 
-type schedulePrefs = {
+type callsPrefs = {
   days: number[]
   startTime: string
   lessons: {
@@ -67,7 +82,4 @@ type schedulePrefs = {
   }
 }
 
-type week = dayData[]
-
-export type { dayNumber, lessonData, dayData, week, schedulePrefs, period, time, dayInfo, callData }
-export { dataPath }
+export type { dayNumber, lessonInfo, dayData, callsPrefs, period, time, dayInfo, callInfo }

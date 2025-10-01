@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import type { week } from '@/data/types';
+import type { dayData } from '@/data/types';
 import ScheduleDay from '@/components/Timetable/ScheduleDay.vue';
 
 export default defineComponent({
@@ -17,7 +17,7 @@ export default defineComponent({
         ScheduleDay,
     },
     setup() {
-        const weekData = ref<week>([]);
+        const weekData = ref<dayData[]>([]);
 
         onMounted(async () => {
             try {
