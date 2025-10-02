@@ -42,13 +42,15 @@ const current = computed(() => props.day === props.selected)
 <style scoped>
 .day-button {
     text-decoration: none;
-    font-size: 1.5rem;
     transition: all 300ms;
     border-radius: 999px;
     color: gray;
+    font-weight: 200;
+    cursor: pointer;
 }
 
 .current {
+    font-weight: 700;
     background-color: lightgray;
     color: black;
     height: 3rem;
