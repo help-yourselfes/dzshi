@@ -27,6 +27,17 @@ const api = {
         return cache.callsPrefs;
     },
 
+    getCurrentDay: async (): Promise<dayInfo> => {
+        const date = new Date();
+
+        const dayId = date.getDay();
+        const days = await api.getAviableDays();
+
+        const day = days.find(d => d.number === dayId);
+        if (day) return day
+        return new Promise((_, rej) => rej('Unsuported day'))
+    },
+
     getDayPrefs: async (dayId: number) => {
         if (!cache.dayPrefs[dayId]) {
             cache.dayPrefs[dayId] = await Storage.getDayPrefs(dayId);
@@ -46,7 +57,7 @@ const api = {
             try {
                 const callsPrefs = await api.getCallsPrefs();
                 const days = await api.getDaysInfo();
-                
+
                 cache.aviableDays = days.filter((v) => callsPrefs.days.includes(v.number));
                 cache.loadState.aviableDays = true;
             } catch (e) {
