@@ -1,72 +1,54 @@
 import type { callInfo, dayData, dayInfo, period, callsPrefs, time } from "../types"
 import generator from "./Generator";
 import Storage from "./Storage";
+import createCache from "./cache";
 
-const cache = {
-    daysInfo: [] as dayInfo[],
-    callsPrefs: {} as callsPrefs,
-    dayPrefs: {} as Record<number, dayData>,
-    aviableDays: [] as dayInfo[],
-    combinedCalls: {} as Record<number, callInfo[]>,
-
-    loadState: {
-        daysInfo: false,
-        callsPrefs: false,
-        dayPrefs: false,
-        aviableDays: false,
-        combinedCalls: false
-    }
-}
+const cache = createCache();
+const get = cache.once;
 
 const api = {
-    getCallsPrefs: async () => {
-        if (!cache.loadState.callsPrefs) {
-            cache.callsPrefs = await Storage.getCallsPrefs();;
-            cache.loadState.callsPrefs = true;
-        }
-        return cache.callsPrefs;
+    getCallsPrefs: async (): Promise<callsPrefs> => {
+        return (await get('callsPrefs', async () => {
+            const data = await Storage.getCallsPrefs();
+            return data
+        }))?.value
     },
 
     getCurrentDay: async (): Promise<dayInfo> => {
-        const date = new Date();
+        return (await get('currentDay', async () => {
+            const date = new Date();
 
-        const dayId = date.getDay();
-        const days = await api.getAviableDays();
+            const dayId = date.getDay();
+            const days = await api.getDaysInfo();
+            console.log(dayId)
 
-        console.log(dayId)
-
-        const day = days.find(d => d.number === dayId);
-        if (day) return day
-        return new Promise((_, rej) => rej('Unsuported day'))
+            return days.find(d => d.number === dayId);
+        }))?.value
     },
 
-    getDayPrefs: async (dayId: number) => {
-        if (!cache.dayPrefs[dayId]) {
-            cache.dayPrefs[dayId] = await Storage.getDayPrefs(dayId);
-        }
-        return cache.dayPrefs[dayId]
+    getDayPrefs: async (dayId: number): Promise<dayData> => {
+        return (await get(`dayPrefs:${dayId}`, async () => {
+            return await Storage.getDayPrefs(dayId);
+        }))?.value
     },
-    getDaysInfo: async () => {
-        if (!cache.daysInfo.length) {
+
+    getDaysInfo: async (): Promise<dayInfo[]> => {
+        return (await get('daysInfo', async () => {
             const data = await Storage.getDaysInfo();
-            cache.daysInfo = data;
-        }
-        return cache.daysInfo
+            return data
+        }))?.value
     },
 
-    getAviableDays: async () => {
-        if (!cache.loadState.aviableDays) {
-            try {
-                const callsPrefs = await api.getCallsPrefs();
-                const days = await api.getDaysInfo();
+    getAviableDays: async (): Promise<dayInfo[]> => {
+        return (await get('aviableDays', async () => {
+            const callsPrefs = await api.getCallsPrefs();
+            if (!callsPrefs) throw new Error('No callsPrefs provided!')
 
-                cache.aviableDays = days.filter((v) => callsPrefs.days.includes(v.number));
-                cache.loadState.aviableDays = true;
-            } catch (e) {
-                console.error('Error while getting aviable days: ', e);
-            }
-        }
-        return cache.aviableDays
+            const days = await api.getDaysInfo();
+            if (!days) throw new Error('No days provided!')
+
+            return days.filter((v: dayInfo) => callsPrefs.days.includes(v.number));
+        }))?.value
     },
 
     getCalls: async (dayId: number): Promise<callInfo[]> => {
@@ -74,16 +56,12 @@ const api = {
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
             rej(`That day is not aviable: ${dayId}\nAviable days: ${days}`)
         )
-        if (!cache.combinedCalls[dayId]) {
+        return (await get(`getCalls:${dayId}`, async () => {
             const callsPrefs = await api.getCallsPrefs();
             const dayPrefs = await api.getDayPrefs(dayId);
-
-            const calls = generator.generateCalls(callsPrefs, dayPrefs);
-
-            cache.combinedCalls[dayId] = calls;
-        }
-
-        return cache.combinedCalls[dayId]
+    
+            return generator.generateCalls(callsPrefs, dayPrefs);
+        }))?.value
     },
 
     getTasks: async (period: period) => {
