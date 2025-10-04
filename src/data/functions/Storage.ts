@@ -1,9 +1,9 @@
-import type { dayData, dayInfo, callsPrefs } from "../types"
+import type { weekDayData, weekDayInfo, callsPrefs } from "../types"
 
 type Storage = {
     getCallsPrefs: () => Promise<callsPrefs>
-    getDayPrefs: (dayId: number) => Promise<dayData>
-    getDaysInfo: () => Promise<dayInfo[]>
+    getDayPrefs: (dayId: number) => Promise<weekDayData>
+    getDaysInfo: () => Promise<weekDayInfo[]>
 }
 
 type GithubStorage = Storage & {

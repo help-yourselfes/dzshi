@@ -10,18 +10,18 @@
     </RouterLink>
 </template>
 <script setup lang="ts">
-import type { dayInfo } from '@/data/types';
+import type { weekDayInfo } from '@/data/types';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
 const props = defineProps({
     day: {
         required: true,
-        type: Object as () => dayInfo
+        type: Object as () => weekDayInfo
     },
     selected: {
         required: true,
-        type: Object as () => dayInfo | undefined
+        type: Object as () => weekDayInfo | undefined
     }
 })
 
