@@ -33,6 +33,8 @@ const api = {
         const dayId = date.getDay();
         const days = await api.getAviableDays();
 
+        console.log(dayId)
+
         const day = days.find(d => d.number === dayId);
         if (day) return day
         return new Promise((_, rej) => rej('Unsuported day'))
