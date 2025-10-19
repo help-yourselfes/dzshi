@@ -24,7 +24,7 @@ const createCache = (autoCleanTime: number = 0.5 * hour) => {
     }
 
     function get(key: string) {
-        if (store.has(key)) return store.get(key)
+        if (store.has(key)) return store.get(key)?.value
         else return undefined
     }
 
@@ -37,14 +37,19 @@ const createCache = (autoCleanTime: number = 0.5 * hour) => {
         else store.clear()
     }
 
-    async function once<T>(key: string, loader: () => Promise<T>, lifeLength = minute) {
-        if (!store.has(key)) {
-            const value = await loader();
-            set(key, value, lifeLength);
-        }
+    async function once<T>(key: string, loader: () => Promise<T>, lifeLength = minute): Promise<T> {
+        if (store.has(key)) return store.get(key)!.value;
 
-        return get(key);
+        try {
+            const value = await loader();
+
+            set(key, value, lifeLength);
+            return store.get(key)!.value;
+        } catch (e) {
+            return new Promise((_, rej) => rej(e))
+        }
     }
+
 
     return { clear, once, stopInterval }
 }

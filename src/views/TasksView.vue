@@ -1,10 +1,63 @@
 <template>
+  <div class="calendar-bar">
+  </div>
 
-    Распиание
-    <div class="tasks-list">
-
+  <div v-if="loading || error">
+    <div v-if="loading">
+      Загружаю...
     </div>
-</template>
-<script>
+    <div v-else>
+      <div v-if="error.code === 404">
+        На этот день пока не записано дз
+      </div>
+      <div v-else>
+        Ошибка:
+        {{ error }}
+      </div>
+    </div>
+  </div>
 
+  <div class="tasks-list" v-else>
+
+    {{ tasks }}
+  </div>
+</template>
+<script setup lang="ts">
+import api from '@/data/functions/Api';
+import useData from '@/data/functions/useData';
+import type { date } from '@/data/types';
+import { computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
+const testDate: date = {
+  day: 7,
+  month: 10,
+  year: 2025
+}
+
+const route = useRoute();
+const router = useRouter();
+
+const date = computed<date>(() => {
+  const q = route.query;
+  const year = Number(q.year) || new Date().getFullYear();
+  const month = Math.min(12, Math.max(1, Number(q.month) || new Date().getMonth() + 1));
+  const day = Math.min(31, Math.max(1, Number(q.day) || new Date().getDate()));
+  return { year, month, day };
+});
+
+const { data: tasks, error, loading } = useData(async () =>
+  api.getTasks(testDate)
+);
+
+watch(
+  date,
+  (d) => {
+    router.replace({
+      path: route.path,
+      query: { ...route.query, year: String(d.year), month: String(d.month), day: String(d.day) }
+    });
+  },
+  { immediate: true }
+);
 </script>
