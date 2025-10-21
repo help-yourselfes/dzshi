@@ -1,4 +1,4 @@
-import type { callInfo, weekDayData, weekDayInfo, callsPrefs, time, date } from "../types"
+import type { callInfo, weekDayData, weekDayInfo, callsPrefs, time, date, lessonInfo } from "../types"
 import { createCache } from "../types";
 import generator from "./Generator";
 import Storage from "./Storage";
@@ -34,10 +34,9 @@ const api = {
     ,
 
     getDaysInfo: async (): Promise<weekDayInfo[]> =>
-    (await get('daysInfo', async () => {
-        const data = await Storage.getDaysInfo();
-        return data
-    }))
+        await get('daysInfo', async () =>
+            Storage.getDaysInfo()
+        )
     ,
 
     getAviableDays: async (): Promise<weekDayInfo[]> =>
@@ -70,7 +69,12 @@ const api = {
         const data = await Storage.getTasks(date);
 
         return data.tasks
-    }))
+    })),
+
+    getLessonInfo: async (id: string): Promise<lessonInfo> =>
+        await get(`lessonInfo:${id}`, async () =>
+            Storage.getLessonInfo(id)
+        )
 
 }
 

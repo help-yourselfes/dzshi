@@ -1,12 +1,12 @@
 import type { weekDayData, weekDayInfo, callsPrefs, date } from "../types"
 
-type Storage = {
+type StorageT = {
     getCallsPrefs: () => Promise<callsPrefs>
     getDayPrefs: (dayId: number) => Promise<weekDayData>
     getDaysInfo: () => Promise<weekDayInfo[]>
 } & any
 
-const Storage: Storage = {
+const Storage: StorageT = {
     path: {
         user: 'help-yourselfes',
         repo: 'dzshi-data',
@@ -17,8 +17,8 @@ const Storage: Storage = {
         return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/`
     },
     async request(url: string) {
-        console.log('request: ', url)
         const path = this.getPath();
+        console.log('request: ', path+url)
         try {
             const res = await fetch(path + url);
 
@@ -50,6 +50,10 @@ const Storage: Storage = {
         const day = date.day.toString().padStart(2, '0')
         const url = `tasks/${year}/${month}/${day}.json`
         return this.request(url)
+    },
+
+    async getLessonInfo(id: string) {
+        return this.request(`lessons/${id}.json`)
     }
 }
 export default Storage

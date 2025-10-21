@@ -18,14 +18,14 @@
   </div>
 
   <div class="tasks-list" v-else>
-
-    {{ tasks }}
+    <LessonTask :task="testTask" />
   </div>
 </template>
 <script setup lang="ts">
+import LessonTask from '@/components/task/LessonTask.vue';
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
-import type { date } from '@/data/types';
+import type { date, task } from '@/data/types';
 import { computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -34,6 +34,15 @@ const testDate: date = {
   month: 10,
   year: 2025
 }
+
+const testTask: task = {
+  lesson: "alg",
+  text: "Делаем номера",
+}
+
+const { data: schedule } = useData(async () => {
+  return api.getCalls
+})
 
 const route = useRoute();
 const router = useRouter();
