@@ -1,7 +1,7 @@
 <template>
     <div class="task">
         <div class="head">
-            <span v-if="lesson.loading.value">Some placeholder</span>
+            <Placeholder class="placeholder" v-if="lesson.loading.value" />
             <span v-else-if="lesson.error.value">{{ lesson.error.value }}</span>
             <span v-else>
                 {{ lesson.data.value?.name }}
@@ -11,7 +11,7 @@
             <div v-if="task.text" class="text">
                 {{ task.text }}
             </div>
-            <div v-if="task .media || task.hint" class="extra">
+            <div v-if="task.media || task.hint" class="extra">
                 <div v-for="media in task.media">
                     {{ media.link }}
                 </div>
@@ -27,6 +27,7 @@
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
 import type { task } from '@/data/types';
+import Placeholder from '../primitives/Placeholder.vue';
 
 const props = defineProps<{
     task: task
@@ -38,5 +39,20 @@ const lesson = useData(async () =>
 </script>
 
 <style scoped>
-    
+.task {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: lightgray;
+}
+
+.head {
+    padding-bottom: 1rem;
+}
+
+.placeholder {
+    height: 1rem;
+    width: 5rem;
+}
 </style>

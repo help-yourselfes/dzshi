@@ -1,4 +1,5 @@
 <template>
+  {{ date.year }}.{{ date.month }}.{{ date.day }}
   <div class="calendar-bar">
   </div>
 
@@ -20,9 +21,12 @@
   <div class="tasks-list" v-else>
     <LessonTask :task="testTask" />
   </div>
+  <TaskMedia :media="{ type: 'photo', link: '...', preview: { type: 'text', text: 'Hello' } }" />
+  <TaskMedia :media="{ type: 'photo', link: '...', preview: { type: 'image', url: '...' } }" />
 </template>
 <script setup lang="ts">
 import LessonTask from '@/components/task/LessonTask.vue';
+import TaskMedia from '@/components/task/TaskMedia.vue';
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
 import type { date, task } from '@/data/types';
@@ -38,6 +42,19 @@ const testDate: date = {
 const testTask: task = {
   lesson: "alg",
   text: "Делаем номера",
+  media: [
+    {
+      type: 'photo',
+      link: 'zxc.zov/1488',
+      preview: {
+        type: "text",
+        text: "Тестовая пикча"
+      }
+    }
+  ],
+  hint: [
+    1, 2, 3
+  ]
 }
 
 const { data: schedule } = useData(async () => {
