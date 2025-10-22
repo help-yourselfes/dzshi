@@ -1,4 +1,4 @@
-import type { callInfo, weekDayData, weekDayInfo, callsPrefs, time, date, lessonInfo } from "../types"
+import type { callInfo, weekDayData, weekDayInfo, callsPrefs, time, date, lessonInfo, task } from "../types"
 import { createCache } from "../types";
 import generator from "./Generator";
 import Storage from "./Storage";
@@ -7,11 +7,10 @@ const cache = createCache();
 const get = cache.once;
 
 const api = {
-    getCallsPrefs: async (): Promise<callsPrefs> =>
-    (await get('callsPrefs', async () => {
-        const data = await Storage.getCallsPrefs();
-        return data
-    }))
+    getCallsPrefs: (): Promise<callsPrefs> =>
+        get('callsPrefs', () =>
+            Storage.getCallsPrefs()
+        )
     ,
 
     getCurrentDay: async (): Promise<weekDayInfo> => {
@@ -27,14 +26,14 @@ const api = {
         }))
     },
 
-    getDayPrefs: async (dayId: number): Promise<weekDayData> =>
-    (await get(`dayPrefs:${dayId}`, async () => {
-        return await Storage.getDayPrefs(dayId);
-    }))
+    getDayPrefs: (dayId: number): Promise<weekDayData> =>
+        get(`dayPrefs:${dayId}`, () =>
+            Storage.getDayPrefs(dayId)
+        )
     ,
 
-    getDaysInfo: async (): Promise<weekDayInfo[]> =>
-        await get('daysInfo', async () =>
+    getDaysInfo: (): Promise<weekDayInfo[]> =>
+        get('daysInfo', () =>
             Storage.getDaysInfo()
         )
     ,
@@ -64,15 +63,13 @@ const api = {
         }))
     },
 
-    getTasks: async (date: date) =>
-    (await get(`tasks:${date.year}/${date.month}/${date.day}`, async () => {
-        const data = await Storage.getTasks(date);
+    getTasks: (date: date): Promise<task[]> =>
+        get(`tasks:${date.year}/${date.month}/${date.day}`, async () =>
+            Storage.getTasks(date)
+        ),
 
-        return data.tasks
-    })),
-
-    getLessonInfo: async (id: string): Promise<lessonInfo> =>
-        await get(`lessonInfo:${id}`, async () =>
+    getLessonInfo: (id: string): Promise<lessonInfo> =>
+        get(`lessonInfo:${id}`, () =>
             Storage.getLessonInfo(id)
         )
 
