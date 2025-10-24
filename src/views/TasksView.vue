@@ -2,10 +2,9 @@
   {{ date.year }}.{{ date.month }}.{{ date.day }}
   <div class="calendar-bar">
   </div>
-
   <div v-if="loading || error">
     <div v-if="loading">
-      Загружаю...
+      Загружаю&nbsp;<Spinner />
     </div>
     <div v-else>
       <div v-if="error.code === 404">
@@ -25,6 +24,7 @@
   <TaskMedia :media="{ type: 'photo', link: '...', preview: { type: 'image', url: '...' } }" />
 </template>
 <script setup lang="ts">
+import Spinner from '@/components/primitives/Spinner/Spinner.vue';
 import LessonTask from '@/components/task/LessonTask.vue';
 import TaskMedia from '@/components/task/TaskMedia.vue';
 import api from '@/data/functions/Api';
