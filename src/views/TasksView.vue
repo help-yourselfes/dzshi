@@ -1,32 +1,52 @@
 <template>
-  <div class="top">
-    {{ date.year }}.{{ date.month }}.{{ date.day }}
-    <div class="calendar-bar">
+  {{ date.year }}.{{ date.month }}.{{ date.day }}
+  <div class="calendar-bar">
+  </div>
+  
+  <div v-if="loading">
+    Загружаю&nbsp;
+    <Spinner />
+  </div>
+
+  <div v-else-if="error">
+    <div v-if="error.code === 404">
+      На этот день пока не записано дз
     </div>
-    <div v-if="loading">
-      Загружаю&nbsp;
-      <Spinner />
-    </div>
-    <div v-else-if="error">
-      <div v-if="error.code === 404">
-        На этот день пока не записано дз
-      </div>
-      <div v-else>
-        Ошибка:
-        {{ error }}
-      </div>
-    </div>
-    <div class="tasks-list" v-else>
-      <component :is="isMobile ? MobileTask : DesktopTask" v-for="task in tasks" :task="task" />
+    <div v-else>
+      Ошибка:
+      {{ error }}
     </div>
   </div>
-  <div class="bottom">
-    <LessonName id="alg" />
-    <LessonName id="geo" />
-    <LessonName id="geog" />
+
+  <Container v-else-if="tasks?.length">
+    <div class="tasks-list">
+      <component :is="isMobile ? MobileTask : DesktopTask" v-for="task in tasks" :task />
+    </div>
+
+    <div class="bottom">
+      <Spinner v-if="untaskedLessons.loading.value" />
+      <span v-else-if="untaskedLessons.error.value">
+        {{ untaskedLessons.error }}
+      </span>
+      <Container v-else>
+        <span class="untasked-text">
+          Пока не задано / не заполнено:
+        </span>
+        <div class="untasked-lessons">
+          <LessonName v-for="lesson in untaskedLessons.data.value" :id="lesson" :short-name="true" />
+        </div>
+      </Container>
+    </div>
+  </Container>
+
+  <div v-else>
+    <span class="no-tasks">
+      На завтра нет дз
+    </span>
   </div>
 </template>
 <script setup lang="ts">
+import Container from '@/components/primitives/Container.vue';
 import LessonName from '@/components/primitives/LessonName.vue';
 import Spinner from '@/components/primitives/Spinner/Spinner.vue';
 import DesktopTask from '@/components/task/DesktopTask.vue';
@@ -46,9 +66,22 @@ const testDate: date = {
   year: 2025
 }
 
-const { data: schedule } = useData(async () => {
-  return api.getCalls
-})
+const { data: tasks, error, loading } = useData(async () =>
+  api.getTasks(testDate)
+);
+
+const untaskedLessons = useData(async () => {
+  if (loading.value || error.value || !tasks.value) {
+    return [];
+  }
+
+  const list = await api.getLessonList(api.getDateDayId(testDate));
+  const taskedList = tasks.value.map(task => task.lesson);
+  const untaskedList = list.filter(id => !taskedList.includes(id));
+
+  return untaskedList;
+});
+watch(tasks, untaskedLessons.reload)
 
 const route = useRoute();
 const router = useRouter();
@@ -61,10 +94,6 @@ const date = computed<date>(() => {
   return { year, month, day };
 });
 
-const { data: tasks, error, loading } = useData(async () =>
-  api.getTasks(testDate)
-);
-
 watch(
   date,
   (d) => {
@@ -76,3 +105,39 @@ watch(
   { immediate: true }
 );
 </script>
+
+<style scoped>
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+}
+
+.bottom {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.untasked-text {
+  font-weight: 600;
+}
+
+.untasked-lessons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  row-gap: 0.2rem;
+  padding: 0.75rem;
+  background-color: lightgray;
+  width: fit-content;
+  max-width: 80vw;
+  border-radius: 1rem;
+}
+</style>

@@ -5,7 +5,7 @@
         {{ id }}
     </span>
     <span v-else>
-        {{ lesson?.name }}
+        {{ shortName && lesson?.shortName ? lesson.shortName :lesson?.name  }}
     </span>
 </template>
 
@@ -15,7 +15,8 @@ import useData from '@/data/functions/useData';
 import Placeholder from './Placeholder.vue';
 
 const props = defineProps<{
-    id: string
+    id: string,
+    shortName?: boolean
 }>();
 
 const { data: lesson, error, loading } = useData(() => api.getLessonInfo(props.id))

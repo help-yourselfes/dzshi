@@ -1,6 +1,6 @@
 export type lessonInfo = {
     name: string
-    'short-name'?: string
+    shortName?: string
     necessary?: boolean
     class: string | string[]
     hint?: {

@@ -16,6 +16,7 @@ type StorageT = {
     getDaysInfo: () => Promise<weekDayInfo[]>
     getTasks: (date: date) => Promise<task[]>
     getLessonInfo: (id:string) => Promise<lessonInfo>
+    getLessonList: () => Promise<string[][]>
 } & githubT;
 
 const Storage: StorageT = {
@@ -46,6 +47,9 @@ const Storage: StorageT = {
     },
     async getCallsPrefs() {
         return this.request(`calls/callsPrefs.json`)
+    },
+    async getLessonList() {
+        return this.request(`calls/lessonsList.json`)
     },
     async getDayPrefs(dayId: number) {
         return this.request(`calls/${dayId}.json`);
