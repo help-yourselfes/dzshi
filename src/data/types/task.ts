@@ -12,7 +12,8 @@ export type media = {
 }
 
 export type hint = {
-
+    text: string,
+    link: string
 }
 
 export type task = {

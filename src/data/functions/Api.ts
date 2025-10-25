@@ -63,6 +63,18 @@ const api = {
         }))
     },
 
+    getLessonList: async (dayId: number): Promise<lessonInfo[]> => {
+        const days = await api.getAviableDays();
+        if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
+            rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
+        )
+
+        return (await get(`getLessonList:${dayId}`, async () => {
+            const dayPrefs = await api.getDayPrefs(dayId);
+            return dayPrefs.lessons
+        }))
+    },
+
     getTasks: (date: date): Promise<task[]> =>
         get(`tasks:${date.year}/${date.month}/${date.day}`, async () =>
             Storage.getTasks(date)

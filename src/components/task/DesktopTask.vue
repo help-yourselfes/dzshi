@@ -1,41 +1,29 @@
 <template>
     <div class="task">
         <div class="head">
-            <Placeholder class="placeholder" v-if="lesson.loading.value" />
-            <span v-else-if="lesson.error.value">{{ lesson.error.value }}</span>
-            <span v-else>
-                {{ lesson.data.value?.name }}
-            </span>
+            <LessonName :id="task.lesson" />
         </div>
         <div class="body">
             <div v-if="task.text" class="text">
                 {{ task.text }}
             </div>
             <div v-if="task.media || task.hint" class="extra">
-                <div v-for="media in task.media">
-                    {{ media.link }}
-                </div>
-                <div v-for="hint in task.hint">
-                    {{ hint }}
-                </div>
+                <TaskMedia v-for="media in task.media" :media />
+                <TaskHint v-for="hint in task.hint" :hint />
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import api from '@/data/functions/Api';
-import useData from '@/data/functions/useData';
 import type { task } from '@/data/types';
-import Placeholder from '../primitives/Placeholder.vue';
+import TaskMedia from './TaskMedia.vue';
+import TaskHint from './TaskHint.vue';
+import LessonName from '../primitives/LessonName.vue';
 
 const props = defineProps<{
     task: task
 }>()
-
-const lesson = useData(async () =>
-    await api.getLessonInfo(props.task.lesson)
-)
 </script>
 
 <style scoped>

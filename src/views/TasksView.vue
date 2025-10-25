@@ -1,12 +1,13 @@
 <template>
-  {{ date.year }}.{{ date.month }}.{{ date.day }}
-  <div class="calendar-bar">
-  </div>
-  <div v-if="loading || error">
-    <div v-if="loading">
-      Загружаю&nbsp;<Spinner />
+  <div class="top">
+    {{ date.year }}.{{ date.month }}.{{ date.day }}
+    <div class="calendar-bar">
     </div>
-    <div v-else>
+    <div v-if="loading">
+      Загружаю&nbsp;
+      <Spinner />
+    </div>
+    <div v-else-if="error">
       <div v-if="error.code === 404">
         На этот день пока не записано дз
       </div>
@@ -15,46 +16,34 @@
         {{ error }}
       </div>
     </div>
+    <div class="tasks-list" v-else>
+      <component :is="isMobile ? MobileTask : DesktopTask" v-for="task in tasks" :task="task" />
+    </div>
   </div>
-
-  <div class="tasks-list" v-else>
-    <LessonTask :task="testTask" />
+  <div class="bottom">
+    <LessonName id="alg" />
+    <LessonName id="geo" />
+    <LessonName id="geog" />
   </div>
-  <TaskMedia :media="{ type: 'photo', link: '...', preview: { type: 'text', text: 'Hello' } }" />
-  <TaskMedia :media="{ type: 'photo', link: '...', preview: { type: 'image', url: '...' } }" />
 </template>
 <script setup lang="ts">
+import LessonName from '@/components/primitives/LessonName.vue';
 import Spinner from '@/components/primitives/Spinner/Spinner.vue';
-import LessonTask from '@/components/task/LessonTask.vue';
-import TaskMedia from '@/components/task/TaskMedia.vue';
+import DesktopTask from '@/components/task/DesktopTask.vue';
+import MobileTask from '@/components/task/MobileTask.vue';
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
-import type { date, task } from '@/data/types';
+import type { date } from '@/data/types';
+import state from '@/store';
 import { computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+const isMobile = computed(() => state.isMobile);
+
 const testDate: date = {
-  day: 7,
+  day: 28,
   month: 10,
   year: 2025
-}
-
-const testTask: task = {
-  lesson: "alg",
-  text: "Делаем номера",
-  media: [
-    {
-      type: 'photo',
-      link: 'zxc.zov/1488',
-      preview: {
-        type: "text",
-        text: "Тестовая пикча"
-      }
-    }
-  ],
-  hint: [
-    1, 2, 3
-  ]
 }
 
 const { data: schedule } = useData(async () => {
