@@ -1,21 +1,25 @@
-import type { dayData, dayInfo, callsPrefs } from "../types"
+import type { weekDayData, weekDayInfo, callsPrefs, date, task, lessonInfo } from "../types"
 
-type Storage = {
-    getCallsPrefs: () => Promise<callsPrefs>
-    getDayPrefs: (dayId: number) => Promise<dayData>
-    getDaysInfo: () => Promise<dayInfo[]>
-}
-
-type GithubStorage = Storage & {
+type githubT = {
     path: {
         user: string,
         repo: string,
-        branch: string | "main",
+        branch: string
     },
     getPath: () => string
 }
 
-const Storage: GithubStorage = {
+type StorageT = {
+    request: <T>(url: string) => Promise<T>
+    getCallsPrefs: () => Promise<callsPrefs>
+    getDayPrefs: (dayId: number) => Promise<weekDayData>
+    getDaysInfo: () => Promise<weekDayInfo[]>
+    getTasks: (date: date) => Promise<task[]>
+    getLessonInfo: (id:string) => Promise<lessonInfo>
+    getLessonList: () => Promise<string[][]>
+} & githubT;
+
+const Storage: StorageT = {
     path: {
         user: 'help-yourselfes',
         repo: 'dzshi-data',
@@ -25,56 +29,45 @@ const Storage: GithubStorage = {
         const { user, repo, branch } = this.path;
         return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/`
     },
-    async getCallsPrefs() {
+    async request(url: string) {
         const path = this.getPath();
+        console.log('request: ', path+url)
         try {
-            const res = await fetch(path + `calls/callsPrefs.json`);
-            const data = await res.json();
-            return data
-        } catch (e) {
-            if (e instanceof Error) {
-                const msg = e.message;
-                console.error(msg)
-                return new Promise((_, rej) => rej(msg))
-            } else {
-                console.error('Unknown error: ', e);
-                return new Promise((_, rej) => rej('Unknown error'))
+            const res = await fetch(path + url);
+
+            if (!res.ok) {
+                return new Promise((_, rej) => rej({code: res.status}))
             }
+            const data = await res.json();
+
+            return new Promise((req) => setTimeout(() => req(data), 500));
+        } catch (e) {
+            return new Promise((_, rej) => rej(e))
         }
     },
-    async getDayPrefs(dayId) {
-        const path = this.getPath();
-        try {
-            const res = await fetch(path + `calls/${dayId}.json`);
-            const data = await res.json();
-            return data;
-        } catch (e) {
-            if (e instanceof Error) {
-                const msg = e.message;
-                console.error(msg)
-                return new Promise((_, rej) => rej(msg))
-            } else {
-                console.error('Unknown error: ', e);
-                return new Promise((_, rej) => rej('Unknown error'))
-            }
-        }
+    async getCallsPrefs() {
+        return this.request(`calls/callsPrefs.json`)
+    },
+    async getLessonList() {
+        return this.request(`calls/lessonsList.json`)
+    },
+    async getDayPrefs(dayId: number) {
+        return this.request(`calls/${dayId}.json`);
     },
     async getDaysInfo() {
-        const path = this.getPath();
-        try {
-            const res = await fetch(path + `days/dayList.json`);
-            const data = await res.json();
-            return data.days;
-        } catch (e) {
-            if (e instanceof Error) {
-                const msg = e.message;
-                console.error(msg)
-                return new Promise((_, rej) => rej(msg))
-            } else {
-                console.error('Unknown error: ', e);
-                return new Promise((_, rej) => rej('Unknown error'))
-            }
-        }
+        return this.request(`days/dayList.json`)
     },
+
+    async getTasks(date: date) {
+        const year = date.year.toString();
+        const month = date.month.toString().padStart(2, '0')
+        const day = date.day.toString().padStart(2, '0')
+        const url = `tasks/${year}/${month}/${day}.json`
+        return this.request(url)
+    },
+
+    async getLessonInfo(id: string) {
+        return this.request(`lessons/${id}.json`)
+    }
 }
 export default Storage

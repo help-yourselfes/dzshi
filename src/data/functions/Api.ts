@@ -1,94 +1,97 @@
-import type { callInfo, dayData, dayInfo, period, callsPrefs, time } from "../types"
+import type { callInfo, weekDayData, weekDayInfo, callsPrefs, time, date, lessonInfo, task } from "../types"
+import { createCache } from "../types";
 import generator from "./Generator";
 import Storage from "./Storage";
 
-const cache = {
-    daysInfo: [] as dayInfo[],
-    callsPrefs: {} as callsPrefs,
-    dayPrefs: {} as Record<number, dayData>,
-    aviableDays: [] as dayInfo[],
-    combinedCalls: {} as Record<number, callInfo[]>,
-
-    loadState: {
-        daysInfo: false,
-        callsPrefs: false,
-        dayPrefs: false,
-        aviableDays: false,
-        combinedCalls: false
-    }
-}
+const cache = createCache();
+const get = cache.once;
 
 const api = {
-    getCallsPrefs: async () => {
-        if (!cache.loadState.callsPrefs) {
-            cache.callsPrefs = await Storage.getCallsPrefs();;
-            cache.loadState.callsPrefs = true;
-        }
-        return cache.callsPrefs;
+    getCallsPrefs: (): Promise<callsPrefs> =>
+        get('callsPrefs', () =>
+            Storage.getCallsPrefs()
+        )
+    ,
+
+    getCurrentDay: async (): Promise<weekDayInfo> => {
+        return (await get('currentDay', async () => {
+            const date = new Date();
+
+            const dayId = date.getDay();
+            const days = await api.getDaysInfo();
+
+            const day = days.find(d => d.number === dayId);
+
+            return day ? day : (new Promise<weekDayInfo>((_, rej) => rej('Not supported day')))
+        }))
     },
 
-    getCurrentDay: async (): Promise<dayInfo> => {
-        const date = new Date();
+    getDateDayId: (date: date): number => 
+        new Date(date.year, date.month - 1, date.day).getDay()
+    ,
 
-        const dayId = date.getDay();
-        const days = await api.getAviableDays();
+    getDayPrefs: (dayId: number): Promise<weekDayData> =>
+        get(`dayPrefs:${dayId}`, () =>
+            Storage.getDayPrefs(dayId)
+        )
+    ,
 
-        console.log(dayId)
+    getDaysInfo: (): Promise<weekDayInfo[]> =>
+        get('daysInfo', () =>
+            Storage.getDaysInfo()
+        )
+    ,
 
-        const day = days.find(d => d.number === dayId);
-        if (day) return day
-        return new Promise((_, rej) => rej('Unsuported day'))
-    },
+    getAviableDays: async (): Promise<weekDayInfo[]> =>
+    (await get('aviableDays', async () => {
+        const callsPrefs = await api.getCallsPrefs();
+        if (!callsPrefs) throw new Error('No callsPrefs provided!')
 
-    getDayPrefs: async (dayId: number) => {
-        if (!cache.dayPrefs[dayId]) {
-            cache.dayPrefs[dayId] = await Storage.getDayPrefs(dayId);
-        }
-        return cache.dayPrefs[dayId]
-    },
-    getDaysInfo: async () => {
-        if (!cache.daysInfo.length) {
-            const data = await Storage.getDaysInfo();
-            cache.daysInfo = data;
-        }
-        return cache.daysInfo
-    },
-
-    getAviableDays: async () => {
-        if (!cache.loadState.aviableDays) {
-            try {
-                const callsPrefs = await api.getCallsPrefs();
-                const days = await api.getDaysInfo();
-
-                cache.aviableDays = days.filter((v) => callsPrefs.days.includes(v.number));
-                cache.loadState.aviableDays = true;
-            } catch (e) {
-                console.error('Error while getting aviable days: ', e);
-            }
-        }
-        return cache.aviableDays
-    },
+        const days = await api.getDaysInfo();
+        if (!days) throw new Error('No days provided!')
+        console.log(days)
+        return days.filter((v: weekDayInfo) => callsPrefs.days.includes(v.number));
+    }))
+    ,
 
     getCalls: async (dayId: number): Promise<callInfo[]> => {
         const days = await api.getAviableDays();
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
-            rej(`That day is not aviable: ${dayId}\nAviable days: ${days}`)
+            rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
         )
-        if (!cache.combinedCalls[dayId]) {
+        return (await get(`getCalls:${dayId}`, async () => {
             const callsPrefs = await api.getCallsPrefs();
             const dayPrefs = await api.getDayPrefs(dayId);
 
-            const calls = generator.generateCalls(callsPrefs, dayPrefs);
-
-            cache.combinedCalls[dayId] = calls;
-        }
-
-        return cache.combinedCalls[dayId]
+            return generator.generateCalls(callsPrefs, dayPrefs);
+        }))
     },
 
-    getTasks: async (period: period) => {
+    getFullLessonsIdList: (): Promise<string[][]> => 
+        get(`getFullLessonsList`, async () => Storage.getLessonList())
+    ,
 
-    }
+    getLessonList: async (dayId: number): Promise<string[]> => {
+        const days = await api.getAviableDays();
+        if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
+            rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
+        )
+        
+        return (await get(`getLessonList:${dayId}`, async () => 
+            (await api.getFullLessonsIdList())[dayId - 1]    
+        ))
+    },
+
+    getTasks: (date: date): Promise<task[]> =>
+        get(`tasks:${date.year}/${date.month}/${date.day}`, async () =>
+            Storage.getTasks(date)
+        ),
+
+    getLessonInfo: (id: string): Promise<lessonInfo> =>
+        get(`lessonInfo:${id}`, () =>
+            Storage.getLessonInfo(id)
+        )
+
 }
 
 export default api;

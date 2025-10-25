@@ -5,7 +5,21 @@ import TimetableView from '@/views/TimetableView.vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', component: TasksView },
+  {
+    path: '/',
+    redirect: (to: any) => {
+      const date = new Date();
+      return {
+        path: '/tasks',
+        query: {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate()
+        }
+      }
+    },
+  },
+  { path: '/tasks', component: TasksView },
   { path: '/calls/:dayId?', component: CallsView },
   { path: '/timetable', component: TimetableView },
   { path: '/about', component: AboutView },

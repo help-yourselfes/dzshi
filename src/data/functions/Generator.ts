@@ -1,9 +1,9 @@
-import type { callInfo, dayData, callsPrefs, time } from "../types";
+import type { callInfo, weekDayData, callsPrefs, time } from "../types";
 import { addTime, parseHHMM } from "./time";
 
 
 const generator = {
-    generateCalls: (callsPrefs: callsPrefs, dayPrefs: dayData): callInfo[] => {
+    generateCalls: (callsPrefs: callsPrefs, dayPrefs: weekDayData): callInfo[] => {
         function mutateTime(minutes: number) {
             currentTime = addTime(currentTime, minutes);
             return currentTime

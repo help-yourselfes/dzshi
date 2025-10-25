@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import api from '@/data/functions/Api';
-import type { dayInfo } from '@/data/types';
+import type { weekDayInfo } from '@/data/types';
 import { onMounted, ref, watch } from 'vue';
 import DayButton from './DayButton.vue';
 
@@ -17,9 +17,9 @@ const props = defineProps({
     }
 })
 
-const days = ref<dayInfo[]>();
+const days = ref<weekDayInfo[]>();
 const selectedDayId = ref<number>(props.selectedDayId);
-const selectedDay = ref<dayInfo>();
+const selectedDay = ref<weekDayInfo>();
 
 const getDays = async () => {
     days.value = await api.getAviableDays();

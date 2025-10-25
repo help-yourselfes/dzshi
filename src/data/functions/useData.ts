@@ -4,7 +4,6 @@ const useData = <T>(loadF: () => Promise<T>) => {
     const data = ref<T | null>(null)
     const error = ref<any>(null)
     const loading = ref(false)
-
     async function load() {
         loading.value = true;
         error.value = false;
@@ -17,10 +16,10 @@ const useData = <T>(loadF: () => Promise<T>) => {
             loading.value = false;
         }
     }
-
+    
     load();
 
-    return {data, error, loading, reload: () => load()}
+    return { data, error, loading, reload: () => load() }
 }
 
 
