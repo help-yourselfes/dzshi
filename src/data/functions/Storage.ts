@@ -1,10 +1,22 @@
-import type { weekDayData, weekDayInfo, callsPrefs, date } from "../types"
+import type { weekDayData, weekDayInfo, callsPrefs, date, task, lessonInfo } from "../types"
+
+type githubT = {
+    path: {
+        user: string,
+        repo: string,
+        branch: string
+    },
+    getPath: () => string
+}
 
 type StorageT = {
+    request: <T>(url: string) => Promise<T>
     getCallsPrefs: () => Promise<callsPrefs>
     getDayPrefs: (dayId: number) => Promise<weekDayData>
     getDaysInfo: () => Promise<weekDayInfo[]>
-} & any
+    getTasks: (date: date) => Promise<task[]>
+    getLessonInfo: (id:string) => Promise<lessonInfo>
+} & githubT;
 
 const Storage: StorageT = {
     path: {
@@ -39,9 +51,7 @@ const Storage: StorageT = {
         return this.request(`calls/${dayId}.json`);
     },
     async getDaysInfo() {
-        const res = await this.request(`days/dayList.json`)
-        if (res instanceof Array) return res
-        else return res.days
+        return this.request(`days/dayList.json`)
     },
 
     async getTasks(date: date) {
