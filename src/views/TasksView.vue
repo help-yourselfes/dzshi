@@ -28,14 +28,7 @@
       <span v-else-if="untaskedLessons.error.value">
         {{ untaskedLessons.error }}
       </span>
-      <Container v-else>
-        <span class="untasked-text">
-          Пока не задано / не заполнено:
-        </span>
-        <div class="untasked-lessons">
-          <LessonName v-for="lesson in untaskedLessons.data.value" :id="lesson" :short-name="true" />
-        </div>
-      </Container>
+      <UntaskedLessonsList v-if="untaskedLessons.data.value" :list="untaskedLessons.data.value" />
     </div>
   </Container>
 
@@ -51,6 +44,8 @@ import LessonName from '@/components/primitives/LessonName.vue';
 import Spinner from '@/components/primitives/Spinner/Spinner.vue';
 import DesktopTask from '@/components/task/DesktopTask.vue';
 import MobileTask from '@/components/task/MobileTask.vue';
+import UntaskedLessons from '@/components/TaskView/UntaskedLessons.vue';
+import UntaskedLessonsList from '@/components/TaskView/UntaskedLessonsList.vue';
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
 import type { date } from '@/data/types';
@@ -120,24 +115,5 @@ watch(
   flex-direction: column;
   align-items: center;
   gap: 0.7rem;
-}
-
-.untasked-text {
-  font-weight: 600;
-}
-
-.untasked-lessons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  row-gap: 0.2rem;
-  padding: 0.75rem;
-  background-color: lightgray;
-  width: fit-content;
-  max-width: 80vw;
-  border-radius: 1rem;
 }
 </style>
