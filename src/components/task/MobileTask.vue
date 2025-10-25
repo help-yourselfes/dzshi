@@ -8,8 +8,8 @@
                 {{ task.text }}
             </div>
             <div v-if="showButton && isOpen" class="extra">
-                <TaskMedia v-for="media in task.media" :media />
-                <TaskHint v-for="hint in task.hint" :hint />
+                <TaskMedia v-for="(media, key) in task.media" :media :key />
+                <TaskHint v-for="(hint, key) in task.hint" :hint :key/>
             </div>
         </div>
 

@@ -20,7 +20,7 @@
 
   <Container v-else-if="tasks?.length">
     <div class="tasks-list">
-      <component :is="isMobile ? MobileTask : DesktopTask" v-for="task in tasks" :task />
+      <component :is="isMobile ? MobileTask : DesktopTask" v-for="task in tasks" :key="task.lesson" :task />
     </div>
 
     <div class="bottom">
@@ -28,7 +28,7 @@
       <span v-else-if="untaskedLessons.error.value">
         {{ untaskedLessons.error }}
       </span>
-      <UntaskedLessonsList v-if="untaskedLessons.data.value" :list="untaskedLessons.data.value" />
+      <UntaskedLessonsList v-else-if="untaskedLessons.data.value" :list="untaskedLessons.data.value" />
     </div>
   </Container>
 
@@ -40,11 +40,9 @@
 </template>
 <script setup lang="ts">
 import Container from '@/components/primitives/Container.vue';
-import LessonName from '@/components/primitives/LessonName.vue';
 import Spinner from '@/components/primitives/Spinner/Spinner.vue';
 import DesktopTask from '@/components/task/DesktopTask.vue';
 import MobileTask from '@/components/task/MobileTask.vue';
-import UntaskedLessons from '@/components/TaskView/UntaskedLessons.vue';
 import UntaskedLessonsList from '@/components/TaskView/UntaskedLessonsList.vue';
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';

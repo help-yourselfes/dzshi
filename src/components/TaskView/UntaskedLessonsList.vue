@@ -1,34 +1,27 @@
 <template>
-        <span class="text">
-          <Container v-if="list.length">
-            Пока не задано / не заполнено:
-          </Container>
-          <Container v-else>
-            Все дз заполненно
-          </Container>
-        </span>
+  <Container v-if="list.length">
+    <span class="text">
+      Пока не задано / не заполнено:
+    </span>
 
-        <div class="lessons">
-          <Container v-if="list.length < 4">
-            <LessonName v-for="lesson in list" :id="lesson"/>
-          </Container>
-
-          <Container v-else>
-            <LessonName v-for="lesson in list" :id="lesson" short-name />
-          </Container>
-        </div>
+    <div class="lessons">
+      <LessonName v-for="id in list" :key="id" :id :short-name="list.length > 3" />
+    </div>
+  </Container>
+  <Container v-else>
+    Все дз заполненно
+  </Container>
 </template>
 <script setup lang="ts">
 import Container from '../primitives/Container.vue';
 import LessonName from '../primitives/LessonName.vue';
 
 const props = defineProps<{
-    list: string[]
+  list: string[]
 }>()
 </script>
 
 <style scoped>
-
 .text {
   font-weight: 600;
 }
@@ -46,4 +39,5 @@ const props = defineProps<{
   width: fit-content;
   max-width: 80vw;
   border-radius: 1rem;
-}</style>
+}
+</style>

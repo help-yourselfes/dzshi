@@ -40,7 +40,7 @@ const Storage: StorageT = {
             }
             const data = await res.json();
 
-            return data;
+            return new Promise((req) => setTimeout(() => req(data), 500));
         } catch (e) {
             return new Promise((_, rej) => rej(e))
         }
