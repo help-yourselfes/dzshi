@@ -3,20 +3,12 @@
 
         <AboutButton></AboutButton>
 
-        <ViewSelector v-if="isMobile">
-            <template #selected>
-                <TasksText v-if="path === '/'" />
-                <CallsText v-else-if="path === '/calls'" />
-                <RouterLink to="/" class="back-button" v-else>
-                    К главной
-                </RouterLink>
-            </template>
-
-            <template #values>
-                <NavBarChoices />
-            </template>
-        </ViewSelector>
-        <NavBarChoices v-else />
+        <ViewSelector v-if="isMobile" :choices @change="onViewChange" />
+        <Container v-else>
+            <NavButton v-for="choice in choices" :to="choice.to" :key="choice.to">
+                <component :is="choice.component" />
+            </NavButton>
+        </Container>
     </nav>
 </template>
 
@@ -26,19 +18,33 @@ import AboutButton from './AboutButton.vue'
 import state from '@/store';
 import ViewSelector from './ViewSelector.vue';
 import { useRoute } from 'vue-router';
-import { computed, watch } from 'vue';
-import NavBarChoices from './NavBarChoices.vue';
+import { computed, shallowRef, watch } from 'vue';
 import CallsText from './CallsText.vue';
 import TasksText from './TasksText.vue';
+import Container from '../primitives/Container.vue';
+import NavButton from './NavButton.vue';
+import type { choice } from '@/data/types';
+import router from '@/router';
+
+const choices = shallowRef<choice[]>([
+    {
+        to: 'calls', component: CallsText,
+    },
+    {
+        to: 'tasks', component: TasksText
+    }
+]);
+
+const onViewChange = (newChoice: choice) => {
+    router.push({ path: newChoice.to})
+}
 
 const isMobile = computed(() => state.isMobile);
 const route = useRoute()
 
-watch(() => route.fullPath, (newPath) => {
+watch(() => route.path, (newPath) => {
     console.log('route changed to', newPath)
 })
-
-const path = computed(() => route.path);
 </script>
 
 <style scoped>

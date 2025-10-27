@@ -1,24 +1,44 @@
 <template>
   <div class="dropdown">
     <button class="dropdown-button" @click="toggleDropdown">
-      <slot name="selected" />
+      <div class="choice">
+        <component :is="currentChoice.component" />
+      </div>
       <DropdownArrowIcon :is-opended="isOpen" />
     </button>
 
     <transition name="dropdown">
       <div v-if="isOpen" class="dropdown-menu">
-        <slot name="values" />
+        <div v-for="choice in choices" :key="choice.to" @click="handleChange(choice)" class="choice">
+          <component :is="choice.component" />
+        </div>
       </div>
     </transition>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { choice } from '@/data/types';
 import DropdownArrowIcon from '@/icons/DropdownArrowIcon.vue';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 
 let timer = 0;
 const isOpen = ref(false);
+
+const props = defineProps<{
+  choices: choice[]
+}>()
+const currentChoice = shallowRef<choice>(props.choices[0]);
+
+const emit = defineEmits<{
+  change: [choice]
+}>()
+
+const handleChange = (newChoice: choice) => {
+  currentChoice.value = newChoice;
+  isOpen.value = false;
+  emit('change', newChoice)
+}
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
@@ -49,7 +69,7 @@ const toggleDropdown = () => {
 }
 
 .dropdown-button {
-  padding: 0.5rem;
+  padding: 0 0.5rem 0 0;
   border-radius: 2rem;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
@@ -67,6 +87,19 @@ const toggleDropdown = () => {
   scale: 0.9;
 }
 
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+
+  width: max-content;
+}
 
 .dropdown-menu {
   width: 100%;
@@ -76,7 +109,7 @@ const toggleDropdown = () => {
   border: 1px solid #ccc;
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 20;
+  z-index: 99;
   overflow: hidden;
   transform-origin: 50% 0%;
 }
