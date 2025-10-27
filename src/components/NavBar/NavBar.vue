@@ -3,10 +3,10 @@
 
         <AboutButton></AboutButton>
 
-        <ViewSelector v-if="isMobile" :choices @change="onViewChange" />
+        <PropsSelect v-if="isMobile" :choices="choices" @change="onViewChange" />
         <Container v-else>
-            <NavButton v-for="choice in choices" :to="choice.to" :key="choice.to">
-                <component :is="choice.component" />
+            <NavButton v-for="page in pages" :to="page.path" :key="page.path">
+                <component :is="page.component" />
             </NavButton>
         </Container>
     </nav>
@@ -16,31 +16,39 @@
 import AboutButton from './AboutButton.vue'
 
 import state from '@/store';
-import ViewSelector from './ViewSelector.vue';
 import { useRoute } from 'vue-router';
-import { computed, shallowRef, watch } from 'vue';
+import { computed, watch, type Component } from 'vue';
 import CallsText from './CallsText.vue';
 import TasksText from './TasksText.vue';
 import Container from '../primitives/Container.vue';
 import NavButton from './NavButton.vue';
-import type { choice } from '@/data/types';
 import router from '@/router';
+import PropsSelect from '../primitives/selects/PropsSelect.vue';
+import SlotsSelect from '../primitives/selects/SlotsSelect.vue';
+import IconText from './IconText.vue';
+import CallsIcon from '@/icons/CallsIcon.vue';
+const route = useRoute()
+const isMobile = computed(() => state.isMobile);
 
-const choices = shallowRef<choice[]>([
+const pages: { component: Component, path: string }[] = [
     {
-        to: 'calls', component: CallsText,
+        component: CallsText,
+        path: '/calls'
     },
     {
-        to: 'tasks', component: TasksText
+        component: TasksText,
+        path: '/'
     }
-]);
+]
+const choices = computed(() => pages.map(v => v.component))
 
-const onViewChange = (newChoice: choice) => {
-    router.push({ path: newChoice.to})
+const onViewChange = (newChoice: Component) => {
+    const n = pages.find(v => v.component === newChoice);
+    if (!n) return;
+    const path = n.path;
+    router.push({ path })
 }
 
-const isMobile = computed(() => state.isMobile);
-const route = useRoute()
 
 watch(() => route.path, (newPath) => {
     console.log('route changed to', newPath)

@@ -2,15 +2,16 @@
   <div class="dropdown">
     <button class="dropdown-button" @click="toggleDropdown">
       <div class="choice">
-        <component :is="currentChoice.component" />
+        <component :is="currentChoice" />
       </div>
       <DropdownArrowIcon :is-opended="isOpen" />
     </button>
 
+
     <transition name="dropdown">
       <div v-if="isOpen" class="dropdown-menu">
-        <div v-for="choice in choices" :key="choice.to" @click="handleChange(choice)" class="choice">
-          <component :is="choice.component" />
+        <div v-for="(choice, key) in choices" :key @click="handleChange(choice)" class="choice">
+          <component :is="choice" />
         </div>
       </div>
     </transition>
@@ -18,23 +19,23 @@
 </template>
 
 <script setup lang="ts">
-import type { choice } from '@/data/types';
 import DropdownArrowIcon from '@/icons/DropdownArrowIcon.vue';
-import { ref, shallowRef } from 'vue';
+import { ref, shallowRef, type Component } from 'vue';
 
 let timer = 0;
+
 const isOpen = ref(false);
 
 const props = defineProps<{
-  choices: choice[]
+  choices: Component[]
 }>()
-const currentChoice = shallowRef<choice>(props.choices[0]);
+const currentChoice = shallowRef(props.choices[0]);
 
 const emit = defineEmits<{
-  change: [choice]
+  change: [Component]
 }>()
 
-const handleChange = (newChoice: choice) => {
+const handleChange = (newChoice: Component) => {
   currentChoice.value = newChoice;
   isOpen.value = false;
   emit('change', newChoice)
