@@ -9,7 +9,7 @@
             </div>
             <div v-if="task.media || task.hint" class="extra">
                 <TaskMedia v-for="media in task.media" :media />
-                <TaskHint v-for="hint in task.hint" :hint />
+                <HintContainer v-if="task.hint" :hints="task.hint" />
             </div>
         </div>
     </div>
@@ -18,8 +18,8 @@
 <script setup lang="ts">
 import type { task } from '@/data/types';
 import TaskMedia from './TaskMedia.vue';
-import TaskHint from './TaskHint.vue';
 import LessonName from '../primitives/LessonName.vue';
+import HintContainer from './HintContainer.vue';
 
 const props = defineProps<{
     task: task
@@ -30,6 +30,8 @@ const props = defineProps<{
 .task {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-width: 16rem;
     padding: 1rem;
     border-radius: 1rem;
     background-color: lightgray;
@@ -39,8 +41,8 @@ const props = defineProps<{
     padding-bottom: 1rem;
 }
 
-.placeholder {
-    height: 1rem;
-    width: 5rem;
+.body {
+    display: flex;
+    flex-direction: row;
 }
 </style>
