@@ -15,5 +15,13 @@ const props = defineProps<{
 
 
 <style scoped>
-.hint {}
+.hint {
+    text-decoration-line: none;
+    font-style: italic;
+    display: block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: gray;
+    color: black;
+}
 </style>
