@@ -1,6 +1,7 @@
 <template>
     <div class="days-container">
-        <DayButton v-for="day in days" :day="day" :key="day.number" :isSelected="selectedDay === day" @update="setDay" />
+        <DayButton v-for="day in days" :day="day" :key="day.number" :isSelected="selectedDay === day"
+            @update="setDay" />
     </div>
 </template>
 
@@ -10,12 +11,9 @@ import type { weekDayInfo } from '@/data/types';
 import { onMounted, ref, watch } from 'vue';
 import DayButton from './DayButton.vue';
 
-const props = defineProps({
-    selectedDayId: {
-        required: true,
-        type: Number
-    }
-})
+const props = defineProps<{
+    selectedDayId: number
+}>()
 
 const days = ref<weekDayInfo[]>();
 const selectedDayId = ref<number>(props.selectedDayId);

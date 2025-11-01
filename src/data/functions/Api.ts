@@ -52,7 +52,6 @@ const api = {
 
         const days = await api.getDaysInfo();
         if (!days) throw new Error('No days provided!')
-        console.log(days)
         return days.filter((v: weekDayInfo) => callsPrefs.days.includes(v.number));
     }))
     ,
@@ -60,7 +59,7 @@ const api = {
     getCalls: async (dayId: number): Promise<callInfo[]> => {
         const days = await api.getAviableDays();
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
-            rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
+            rej(`unsupported day`)
         )
         return (await get(`getCalls:${dayId}`, async () => {
             const callsPrefs = await api.getCallsPrefs();
