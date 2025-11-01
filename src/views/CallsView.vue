@@ -28,16 +28,7 @@ const router = useRouter();
 const dayId = ref<number>(1);
 const { data: calls, error, loading, reload: reloadCalls } = useData<callInfo[]>(
     async () => {
-        const apiDay = (async () => {
-            try {
-                return (await api.getCurrentDay()).number
-            } catch (e) {
-                // for holidays
-                return 1
-            }
-        })()
-
-        const day = parseInt(route.params.dayId as string) || (await apiDay)
+        const day = parseInt(route.params.dayId as string) || (await api.getCurrentDayId())
 
         if (dayId.value !== day) {
             router.replace(`/calls/${day}`)

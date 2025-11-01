@@ -13,11 +13,14 @@ const api = {
         )
     ,
 
+    getCurrentDayId: async () =>
+        get(`currentDayId`, async () =>
+            (new Date()).getDay()
+        ),
+
     getCurrentDay: async (): Promise<weekDayInfo> => {
         return (await get('currentDay', async () => {
-            const date = new Date();
-
-            const dayId = date.getDay();
+            const dayId = await api.getCurrentDayId()
             const days = await api.getDaysInfo();
 
             const day = days.find(d => d.number === dayId);
@@ -26,7 +29,7 @@ const api = {
         }))
     },
 
-    getDateDayId: (date: date): number => 
+    getDateDayId: (date: date): number =>
         new Date(date.year, date.month - 1, date.day).getDay()
     ,
 
@@ -67,7 +70,7 @@ const api = {
         }))
     },
 
-    getFullLessonsIdList: (): Promise<string[][]> => 
+    getFullLessonsIdList: (): Promise<string[][]> =>
         get(`getFullLessonsList`, async () => Storage.getLessonList())
     ,
 
@@ -76,9 +79,9 @@ const api = {
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
             rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
         )
-        
-        return (await get(`getLessonList:${dayId}`, async () => 
-            (await api.getFullLessonsIdList())[dayId - 1]    
+
+        return (await get(`getLessonList:${dayId}`, async () =>
+            (await api.getFullLessonsIdList())[dayId - 1]
         ))
     },
 
