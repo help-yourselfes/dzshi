@@ -1,12 +1,6 @@
 <template>
-    <RouterLink class="day-button" :class="current ? 'current' : ''" :to="`/calls/${day.number}`" @click="handleClick">
-        <span v-if="current">
-            {{ fullName }}
-
-        </span>
-        <span v-else>
-            {{ shortName }}
-        </span>
+    <RouterLink class="day-button" :class="isSelected ? 'current' : ''" :to="`/calls/${day.number}`" @click="handleClick">
+        {{ isSelected ? fullName : shortName }}
     </RouterLink>
 </template>
 <script setup lang="ts">
@@ -14,16 +8,10 @@ import type { weekDayInfo } from '@/data/types';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-const props = defineProps({
-    day: {
-        required: true,
-        type: Object as () => weekDayInfo
-    },
-    selected: {
-        required: true,
-        type: Object as () => weekDayInfo | undefined
-    }
-})
+const props = defineProps<{
+    day: weekDayInfo,
+    isSelected: boolean
+}>()
 
 const emit = defineEmits<{
     update: [newDayId: number]
@@ -35,7 +23,6 @@ const handleClick = () => {
 
 const shortName = computed(() => props.day['short-name'])
 const fullName = computed(() => props.day.name)
-const current = computed(() => props.day === props.selected)
 
 </script>
 
