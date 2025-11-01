@@ -3,20 +3,12 @@
 
         <AboutButton></AboutButton>
 
-        <ViewSelector v-if="isMobile">
-            <template #selected>
-                <TasksText v-if="path === '/'" />
-                <CallsText v-else-if="path === '/calls'" />
-                <RouterLink to="/" class="back-button" v-else>
-                    К главной
-                </RouterLink>
-            </template>
-
-            <template #values>
-                <NavBarChoices />
-            </template>
-        </ViewSelector>
-        <NavBarChoices v-else />
+        <PropsSelect v-if="isMobile" :choices="choices" @change="onViewChange" />
+        <Container v-else>
+            <NavButton v-for="page in pages" :to="page.path" :key="page.path">
+                <component :is="page.component" />
+            </NavButton>
+        </Container>
     </nav>
 </template>
 
@@ -24,21 +16,43 @@
 import AboutButton from './AboutButton.vue'
 
 import state from '@/store';
-import ViewSelector from './ViewSelector.vue';
 import { useRoute } from 'vue-router';
-import { computed, watch } from 'vue';
-import NavBarChoices from './NavBarChoices.vue';
+import { computed, watch, type Component } from 'vue';
 import CallsText from './CallsText.vue';
 import TasksText from './TasksText.vue';
-
-const isMobile = computed(() => state.isMobile);
+import Container from '../primitives/Container.vue';
+import NavButton from './NavButton.vue';
+import router from '@/router';
+import PropsSelect from '../primitives/selects/PropsSelect.vue';
+import SlotsSelect from '../primitives/selects/SlotsSelect.vue';
+import IconText from './IconText.vue';
+import CallsIcon from '@/icons/CallsIcon.vue';
 const route = useRoute()
+const isMobile = computed(() => state.isMobile);
 
-watch(() => route.fullPath, (newPath) => {
+const pages: { component: Component, path: string }[] = [
+    {
+        component: CallsText,
+        path: '/calls'
+    },
+    {
+        component: TasksText,
+        path: '/'
+    }
+]
+const choices = computed(() => pages.map(v => v.component))
+
+const onViewChange = (newChoice: Component) => {
+    const n = pages.find(v => v.component === newChoice);
+    if (!n) return;
+    const path = n.path;
+    router.push({ path })
+}
+
+
+watch(() => route.path, (newPath) => {
     console.log('route changed to', newPath)
 })
-
-const path = computed(() => route.path);
 </script>
 
 <style scoped>
