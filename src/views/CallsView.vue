@@ -53,7 +53,7 @@ const calls = useData<callInfo[]>(
 watch(() => route.params.dayId, calls.reload)
 
 const currentCallId = useData<number>(async () =>
-    await api.getCallIdFromTime({ h: 12, m: 39 }, dayId.value)
+    await api.getCurrentCallId(dayId.value)
 )
 
 const timer = setInterval(currentCallId.reload, 60_000);
