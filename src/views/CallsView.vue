@@ -1,17 +1,22 @@
 <template>
     <DaySelect :selectedDayId="dayId" />
-    <Container v-if="loading || error">
-        <div v-if="loading">
-            Загружаю ...
+    <Container v-if="calls.loading.value || calls.error.value">
+        <div v-if="calls.loading.value" class="center">
+            Загружаю
+            <Spinner />
         </div>
-        <div v-else-if="error === 'unsupported day'" class="unsupported-day">
+        <div v-else-if="calls.error.value === 'unsupported day'" class="unsupported-day">
             Этот день не поддерживается
         </div>
-        <ErrorBox :error v-else />
+        <ErrorBox :error="calls.error.value" v-else />
     </Container>
     <Container v-else>
         <div class="list">
-            <Call v-for="(call, index) in calls" :call="call" :key="index"></Call>
+
+            <Container v-for="(call, key) in calls.data.value">
+                <Call :call :key :isCurrent="key === currentCallId.data.value" />
+            </Container>
+
         </div>
     </Container>
 </template>
@@ -21,15 +26,17 @@ import Call from '@/components/Calls/Call.vue';
 import DaySelect from '@/components/dayChoice/DaySelect.vue';
 import Container from '@/components/primitives/Container.vue';
 import ErrorBox from '@/components/primitives/ErrorBox.vue';
+import Spinner from '@/components/primitives/Spinner/Spinner.vue';
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
 import type { callInfo } from '@/data/types';
-import { ref, watch } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const dayId = ref<number>(0);
-const { data: calls, error, loading, reload: reloadCalls } = useData<callInfo[]>(
+
+const calls = useData<callInfo[]>(
     async () => {
         const day = parseInt(route.params.dayId as string) || (await api.getCurrentDayId())
 
@@ -43,12 +50,24 @@ const { data: calls, error, loading, reload: reloadCalls } = useData<callInfo[]>
     }
 )
 
-watch(() => route.params.dayId, () => {
-    reloadCalls()
+watch(() => route.params.dayId, calls.reload)
+
+const currentCallId = useData<number>(async () =>
+    await api.getCallIdFromTime({ h: 12, m: 39 }, dayId.value)
+)
+
+const timer = setInterval(currentCallId.reload, 60_000);
+onUnmounted(() => {
+    clearInterval(timer)
 })
+
 
 </script>
 <style scoped>
+.center {
+    justify-content: center;
+}
+
 .unsupported-day {
     display: flex;
     justify-content: center;

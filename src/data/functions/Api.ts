@@ -2,6 +2,7 @@ import type { callInfo, weekDayData, weekDayInfo, callsPrefs, time, date, lesson
 import { createCache } from "../types";
 import generator from "./Generator";
 import Storage from "./Storage";
+import { currentTime, isBetween } from "./time";
 
 const cache = createCache();
 const get = cache.once;
@@ -14,9 +15,8 @@ const api = {
     ,
 
     getCurrentDayId: async () =>
-        get(`currentDayId`, async () =>
-            (new Date()).getDay()
-        ),
+        (new Date()).getDay()
+    ,
 
     getCurrentDay: async (): Promise<weekDayInfo> => {
         return (await get('currentDay', async () => {
@@ -68,6 +68,22 @@ const api = {
             return generator.generateCalls(callsPrefs, dayPrefs);
         }))
     },
+
+    getCallIdFromTime: async (time: time, dayId: number) =>
+        get(`callFromTime:${time.h}:${time.m}:${dayId}`, async () => {
+            const calls = await api.getCalls(dayId);
+            let id = -1;
+            calls.forEach((call, index) => {
+                if (isBetween(time, call.start, call.end))
+                    id = index;
+            })
+            return new Promise<number>((req, rej) => id >= 0 ? req(id) : rej('no call'))
+        }),
+
+    getCurrentCallId: async (dayId: number) =>
+        get('currentCall', async () =>
+            api.getCallIdFromTime(currentTime(), dayId)
+        ),
 
     getFullLessonsIdList: (): Promise<string[][]> =>
         get(`getFullLessonsList`, async () => Storage.getLessonList())

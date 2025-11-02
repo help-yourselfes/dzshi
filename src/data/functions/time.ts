@@ -1,5 +1,12 @@
 import type { time } from '../types'
 
+const currentTime = (): time => {
+  const date = new Date(); return {
+    h: date.getHours(),
+    m: date.getMinutes()
+  }
+}
+
 const addTime = (t: time, minutes: number): time => {
   const total = t.h * 60 + t.m + minutes
   return toTime(total)
@@ -23,18 +30,7 @@ const isBetween = (time: time, start: time, end: time) => {
   const startN = toMinutes(start);
   const endN = toMinutes(end);
 
-  if (timeN > startN && timeN < endN) {
-    return {
-      isBetween: true,
-      fromStart: toTime(timeN - startN),
-      toEnd: toTime(endN - timeN)
-    }
-  }
-  else {
-    return {
-      isBetween: false
-    }
-  }
+  return (timeN >= startN && timeN <= endN)
 }
 
-export { addTime, toMinutes, parseHHMM }
+export { addTime, toMinutes, parseHHMM, isBetween, currentTime }
