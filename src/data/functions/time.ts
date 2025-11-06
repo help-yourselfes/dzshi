@@ -1,4 +1,4 @@
-import type { period, time } from '../types'
+import type { time } from '../types'
 
 const addTime = (t: time, minutes: number): time => {
   const total = t.h * 60 + t.m + minutes
