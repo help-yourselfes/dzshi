@@ -48,6 +48,7 @@ const props = defineProps<{
     border-radius: 1rem;
     background-color: lightgray;
     position: relative;
+    z-index: -1;
     gap: 1rem;
 }
 
