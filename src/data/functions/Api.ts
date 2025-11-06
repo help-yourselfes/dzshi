@@ -2,6 +2,7 @@ import type { callInfo, weekDayData, weekDayInfo, callsPrefs, time, date, lesson
 import { createCache } from "../types";
 import generator from "./Generator";
 import Storage from "./Storage";
+import { currentTime, isBetween } from "./time";
 
 const cache = createCache();
 const get = cache.once;
@@ -13,11 +14,13 @@ const api = {
         )
     ,
 
+    getCurrentDayId: async () =>
+        (new Date()).getDay()
+    ,
+
     getCurrentDay: async (): Promise<weekDayInfo> => {
         return (await get('currentDay', async () => {
-            const date = new Date();
-
-            const dayId = date.getDay();
+            const dayId = await api.getCurrentDayId()
             const days = await api.getDaysInfo();
 
             const day = days.find(d => d.number === dayId);
@@ -26,7 +29,7 @@ const api = {
         }))
     },
 
-    getDateDayId: (date: date): number => 
+    getDateDayId: (date: date): number =>
         new Date(date.year, date.month - 1, date.day).getDay()
     ,
 
@@ -49,7 +52,6 @@ const api = {
 
         const days = await api.getDaysInfo();
         if (!days) throw new Error('No days provided!')
-        console.log(days)
         return days.filter((v: weekDayInfo) => callsPrefs.days.includes(v.number));
     }))
     ,
@@ -57,7 +59,7 @@ const api = {
     getCalls: async (dayId: number): Promise<callInfo[]> => {
         const days = await api.getAviableDays();
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
-            rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
+            rej(`unsupported day`)
         )
         return (await get(`getCalls:${dayId}`, async () => {
             const callsPrefs = await api.getCallsPrefs();
@@ -67,7 +69,23 @@ const api = {
         }))
     },
 
-    getFullLessonsIdList: (): Promise<string[][]> => 
+    getCallIdFromTime: async (time: time, dayId: number) =>
+        get(`callFromTime:${time.h}:${time.m}:${dayId}`, async () => {
+            const calls = await api.getCalls(dayId);
+            let id = -1;
+            calls.forEach((call, index) => {
+                if (isBetween(time, call.start, call.end))
+                    id = index;
+            })
+            return new Promise<number>((req, rej) => id >= 0 ? req(id) : rej('no call'))
+        }),
+
+    getCurrentCallId: async (dayId: number) =>
+        get('currentCall', async () =>
+            api.getCallIdFromTime(currentTime(), dayId)
+        ),
+
+    getFullLessonsIdList: (): Promise<string[][]> =>
         get(`getFullLessonsList`, async () => Storage.getLessonList())
     ,
 
@@ -76,9 +94,9 @@ const api = {
         if (!days.find(v => v.number === dayId)) return new Promise((_, rej) =>
             rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
         )
-        
-        return (await get(`getLessonList:${dayId}`, async () => 
-            (await api.getFullLessonsIdList())[dayId - 1]    
+
+        return (await get(`getLessonList:${dayId}`, async () =>
+            (await api.getFullLessonsIdList())[dayId - 1]
         ))
     },
 

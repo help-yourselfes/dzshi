@@ -15,7 +15,7 @@ type StorageT = {
     getDayPrefs: (dayId: number) => Promise<weekDayData>
     getDaysInfo: () => Promise<weekDayInfo[]>
     getTasks: (date: date) => Promise<task[]>
-    getLessonInfo: (id:string) => Promise<lessonInfo>
+    getLessonInfo: (id: string) => Promise<lessonInfo>
     getLessonList: () => Promise<string[][]>
 } & githubT;
 
@@ -31,16 +31,16 @@ const Storage: StorageT = {
     },
     async request(url: string) {
         const path = this.getPath();
-        console.log('request: ', path+url)
+        console.log('request: ', path + url)
         try {
             const res = await fetch(path + url);
 
             if (!res.ok) {
-                return new Promise((_, rej) => rej({code: res.status}))
+                return new Promise((_, rej) => rej({ code: res.status }))
             }
             const data = await res.json();
-
-            return new Promise((req) => setTimeout(() => req(data), 500));
+            return data
+            // return new Promise((req) => setTimeout(() => req(data), 500));
         } catch (e) {
             return new Promise((_, rej) => rej(e))
         }
