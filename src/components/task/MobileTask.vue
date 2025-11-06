@@ -9,7 +9,7 @@
             </div>
             <div v-if="showButton && isOpen" class="extra">
                 <TaskMedia v-for="(media, key) in task.media" :media :key />
-                <TaskHint v-for="(hint, key) in task.hint" :hint :key/>
+                <HintContainer v-if="task.hint" :hints="task.hint" />
             </div>
         </div>
 
@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import type { task } from '@/data/types';
 import TaskMedia from './TaskMedia.vue';
-import TaskHint from './TaskHint.vue';
 import LessonName from '../primitives/LessonName.vue';
 import { computed, ref } from 'vue';
+import HintContainer from './HintContainer.vue';
 
 
 const showButton = computed(() => props.task.hint || props.task.media)

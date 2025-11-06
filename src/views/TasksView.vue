@@ -19,7 +19,7 @@
   </div>
 
   <Container v-else-if="tasks?.length">
-    <div class="tasks-list">
+    <div :class="isMobile ? 'task-list-mobile' : 'task-list-desktop'">
       <component :is="isMobile ? MobileTask : DesktopTask" v-for="task in tasks" :key="task.lesson" :task />
     </div>
 
@@ -100,7 +100,14 @@ watch(
 </script>
 
 <style scoped>
-.tasks-list {
+.task-list-desktop {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.task-list-mobile {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
