@@ -6,7 +6,6 @@ const currentTime = (): time => {
     m: date.getMinutes()
   }
 }
-
 const addTime = (t: time, minutes: number): time => {
   const total = t.h * 60 + t.m + minutes
   return toTime(total)
