@@ -2,7 +2,9 @@
     <div v-if="call.type === 'lesson' || isCurrent" :class="{
         'call': !isCurrent,
         'current-call': isCurrent,
-        type
+        'lesson': type === 'lesson',
+        'big-break': type === 'big-break',
+        'break': type === 'break'
     }">
         <span :class="isCurrent ? 'active-name' : 'name'">
             {{ name }}
@@ -57,7 +59,7 @@ const type = computed(() => props.call.type)
 }
 
 .current-call {
-    padding: 2rem;
+    padding: 2.25rem;
 }
 
 .fade-text {
@@ -73,8 +75,13 @@ const type = computed(() => props.call.type)
     justify-content: center;
 }
 
+.name, .active-name {
+    font-size: 1.25rem;
+    color: var(--text);
+}
+
 .active-name {
-    font-weight: 600;
+    font-weight: var(--f_semi-bold);
 }
 
 .start,
@@ -87,7 +94,8 @@ const type = computed(() => props.call.type)
     width: max-content;
     text-align: end;
     line-height: 100%;
-    font-weight: 600;
+    font-weight: var(--f_semi-bold);
+    font-size: 1.25rem;
 }
 
 .time {
