@@ -4,9 +4,21 @@
 html {
   --background:  white;
   --text: black;
-  --accent: #FFA000;
   --font: 'Roboto'
 
+  --input: #161616;
+  --input-light:#333333;
+  
+  --back: #1E1B18;
+  --middle-back:#211E1B;
+  --middle: #2C2621;
+  --top: #3B332B;
+  --light: #8C8680;
+
+  --accent-dark: #986512;
+  --accent: #FFBF00;
+
+  --accent-add: #FF4400;
 }
 
 body {

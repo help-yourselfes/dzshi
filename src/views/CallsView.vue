@@ -11,12 +11,10 @@
         <ErrorBox :error="calls.error.value" v-else />
     </Container>
     <Container v-else>
-        <div class="list">
-
+        <div class="list" v-if="currentCallId.data">
             <Container v-for="(call, key) in calls.data.value">
                 <Call :call :key :isCurrent="key === currentCallId.data.value" />
             </Container>
-
         </div>
     </Container>
 </template>
@@ -55,6 +53,7 @@ watch(() => route.params.dayId, calls.reload)
 const currentCallId = useData<number>(async () =>
     await api.getCurrentCallId(dayId.value)
 )
+watch(() => calls.data.value?.length, currentCallId.reload)
 
 const timer = setInterval(currentCallId.reload, 60_000);
 onUnmounted(() => {
