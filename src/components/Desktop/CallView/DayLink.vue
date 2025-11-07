@@ -1,23 +1,30 @@
 <template>
-    <div class="day-button">
-        <RouterLink :to="`/calls/${day.number}`">
-            <div class="day-link" 
-            :class="{'selected-day-link' : isSelected}"
-            :key="day.number">
-                {{ day.name }}
-            </div>
-        </RouterLink>
-    </div>
+    <RouterLink :to="`/calls/${day.number}`" class="day-button" :class="{ 'selected': isSelected }">
+        {{ day.name }}
+    </RouterLink>
 </template>
 
 <script setup lang="ts">
-import api from '@/data/functions/Api';
-import useData from '@/data/functions/useData';
 import type { weekDayInfo } from '@/data/types';
 
-const props = defineProps<{
+defineProps<{
     day: weekDayInfo,
     isSelected: boolean
 }>()
 
 </script>
+
+<style scoped>
+.day-button {
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    background-color: var(--middle);
+    text-decoration: none;
+    color: var(--text);
+}
+
+.selected {
+    background-color: var(--accent);
+    
+}
+</style>
