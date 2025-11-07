@@ -39,6 +39,7 @@ watch(() => route.params.dayId, calls.reload)
 const currentCallId = useData<number>(async () =>
     await api.getCurrentCallId(dayId.value)
 )
+watch(() => calls.data.value?.length, currentCallId.reload)
 
 const timer = setInterval(currentCallId.reload, 60_000);
 onUnmounted(() => {

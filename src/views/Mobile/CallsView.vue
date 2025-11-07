@@ -9,10 +9,9 @@
             Этот день не поддерживается
         </div>
         <ErrorBox :error="calls.error.value" v-else />
-
     </Container>
     <Container v-else>
-        <div class="list">
+        <div class="list" v-if="currentCallId.data">
             <Container v-for="(call, key) in calls.data.value">
                 <Call :call :key :isCurrent="key === currentCallId.data.value" />
             </Container>

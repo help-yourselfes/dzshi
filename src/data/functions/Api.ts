@@ -8,6 +8,7 @@ const cache = createCache();
 const get = cache.once;
 
 const api = {
+    getRandomSticker: () => {},
     getCallsPrefs: (): Promise<callsPrefs> =>
         get('callsPrefs', () =>
             Storage.getCallsPrefs()
@@ -32,7 +33,6 @@ const api = {
     getDateDayId: (date: date): number =>
         new Date(date.year, date.month - 1, date.day).getDay()
     ,
-
     getDayPrefs: (dayId: number): Promise<weekDayData> =>
         get(`dayPrefs:${dayId}`, () =>
             Storage.getDayPrefs(dayId)
