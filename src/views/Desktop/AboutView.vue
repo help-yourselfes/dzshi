@@ -15,22 +15,22 @@ import VueIcon from '@/icons/tools/VueIcon.vue';
             домашними заданиями
         </p>
     </div>
-    <div class="tools-container">
+    <div class="tools-block">
         <p class="tool">
             Написана на <span class="vuejs">
-                <VueIcon />
+                <VueIcon class="tool-icon" />
                 Vue.js
             </span>
         </p>
         <p class="tool">
             с использованием <span class="ts">
-                <TSIcon />
+                <TSIcon class="tool-icon" />
                 TypeScript
             </span>
         </p>
         <p class="tool">
             и сборкой через <span class="vite">
-                <ViteIcon />
+                <ViteIcon class="tool-icon" />
                 Vite
             </span>
         </p>
@@ -38,8 +38,19 @@ import VueIcon from '@/icons/tools/VueIcon.vue';
 </template>
 
 <style>
+.view {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 2.25rem;
+}
+
 .info-block {
-    background-color: var(--middle);
+    .logo {
+        height: 6.75rem;
+    }
 
     .logo-picture {
         fill: var(--accent)
@@ -51,4 +62,52 @@ import VueIcon from '@/icons/tools/VueIcon.vue';
 }
 </style>
 
-<style scoped></style>
+<style scoped>
+.info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: var(--middle);
+    padding: 2rem;
+    border-radius: 2rem;
+    width: min-content;
+}
+
+
+.description {
+    text-align: center;
+}
+
+.tools-block {
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tool {
+    display: inline-flex;
+    gap: 0.5rem;
+
+    span {
+        display: inline-flex;
+        gap: 0.25rem;
+    }
+}
+
+.tool-icon {
+    height: 1.5rem;
+}
+
+.vuejs {
+    color: #41B883;
+}
+
+.ts {
+    color: #3178C6;
+}
+
+.vite {
+    color: #9862FE;
+}
+</style>
