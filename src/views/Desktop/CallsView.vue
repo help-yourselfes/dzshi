@@ -23,3 +23,13 @@ const props = defineProps<{
     currentCallId: UseDataResult<number>
 }>()
 </script>
+
+<style>
+.view {
+    display: flex;
+    flex-direction: row;
+} 
+</style>
+
+<style scoped>
+</style>
