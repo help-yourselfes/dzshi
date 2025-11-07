@@ -1,6 +1,6 @@
 <template>
     <div class="day-select">
-        Выбери день:
+        {{ text }}
         <WaitASecond v-if="loading" />
         <ErrorBox v-else-if="error" :error />
         <div v-else class="day-list">
@@ -15,12 +15,18 @@ import useData from '@/data/functions/useData';
 import DayLink from './DayLink.vue';
 import WaitASecond from '@/components/primitives/Spinner/WaitASecond.vue';
 import ErrorBox from '@/components/primitives/ErrorBox.vue';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     dayId: number
 }>();
 
 const { data: days, error, loading } = useData(() => api.getAviableDays())
+
+const text = computed(() => {
+    if (props.dayId === 0) return 'Выбери день:'
+    return 'Доступные дни:'
+})
 </script>
 
 <style scoped>
