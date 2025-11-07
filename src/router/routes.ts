@@ -2,7 +2,6 @@ import AboutView from "@/views/AboutView.vue";
 import CallsView from "@/views/CallsView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import TasksView from "@/views/TasksView.vue";
-import TimetableView from "@/views/TimetableView.vue";
 import type { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
@@ -22,7 +21,6 @@ const routes: RouteRecordRaw[] = [
   },
   { path: '/tasks', component: TasksView },
   { path: '/calls/:dayId?', component: CallsView },
-  { path: '/timetable', component: TimetableView },
   { path: '/about', component: AboutView },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView }
 ]

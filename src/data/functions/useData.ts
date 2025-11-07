@@ -1,4 +1,10 @@
-import { ref } from "vue"
+import { ref, type Ref, type UnwrapRef } from "vue"
+export type UseDataResult<T> = {
+  data: Ref<UnwrapRef<T> | null>;
+  loading: Ref<boolean>;
+  error: Ref<Error | null>;
+  reload: () => Promise<void>;
+};
 
 const useData = <T>(loadF: () => Promise<T>) => {
     const data = ref<T | null>(null)

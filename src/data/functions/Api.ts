@@ -83,7 +83,7 @@ const api = {
     getCurrentCallId: async (dayId: number) =>
         get('currentCall', async () =>
             api.getCallIdFromTime(currentTime(), dayId)
-        ),
+        , 59_000),
 
     getFullLessonsIdList: (): Promise<string[][]> =>
         get(`getFullLessonsList`, async () => Storage.getLessonList())
