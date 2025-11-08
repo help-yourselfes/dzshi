@@ -19,9 +19,10 @@ const routes: RouteRecordRaw[] = [
       }
     },
   },
-  { path: '/tasks', component: TasksView },
-  { path: '/calls/:dayId?', component: CallsView },
-  { path: '/about', component: AboutView },
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView }
+  { path: '/tasks', name: 'tasks', component: TasksView },
+  { path: '/calls/:dayId?', name: 'calls', component: CallsView },
+  { path: '/about', name: 'about', component: AboutView },
+  { path: '/notfound', name: 'notFound', component: NotFoundView },
+  { path: '/:pathMatch(.*)*', redirect: { path: '/notfound' } }
 ]
 export default routes

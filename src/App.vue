@@ -34,7 +34,7 @@ onBeforeUnmount(() => {
 
 <template>
   <NavBar v-if="showNavbar" />
-  <div class="view" :class="route.path === '/about' ? 'about-view' : ''">
+  <div class="view" :class="route.name">
     <RouterView />
   </div>
 </template>
