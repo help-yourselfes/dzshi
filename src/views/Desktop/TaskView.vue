@@ -32,3 +32,15 @@ const props = defineProps<{
 
 const list = props.tasks.data;
 </script>
+
+<style scoped>
+main {
+  box-sizing: content-box;
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  border-radius: 1.5rem;
+  border: 0.125rem solid var(--top);
+}
+</style>
