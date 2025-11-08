@@ -1,23 +1,24 @@
 <template>
-    <div v-if="call.type === 'lesson' || isCurrent" :class="{
-        'call': !isCurrent,
-        'current-call': isCurrent,
-        'lesson': type === 'lesson',
-        'big-break': type === 'big-break',
-        'break': type === 'break'
-    }">
-        <span :class="isCurrent ? 'active-name' : 'name'">
-            {{ name }}
-        </span>
-        <div class="time">
-            <TimeSpan :time="call.start" class="start" :class="isCurrent && 'fade-text'" />
-            <span v-if="isCurrent" class="remain-time">
-                <RemainMinutes :end="call.end" />
+    <Transition>
+        <div v-if="call.type === 'lesson' || isCurrent" :class="{
+            'call': !isCurrent,
+            'current-call': isCurrent,
+            'lesson': type === 'lesson',
+            'big-break': type === 'big-break',
+            'break': type === 'break'
+        }">
+            <span :class="isCurrent ? 'active-name' : 'name'">
+                {{ name }}
             </span>
-            <TimeSpan :time="call.end" class="end" :class="isCurrent && 'fade-text'" />
+            <div class="time">
+                <TimeSpan :time="call.start" class="start" :class="isCurrent && 'fade-text'" />
+                <span v-if="isCurrent" class="remain-time">
+                    <RemainMinutes :end="call.end" />
+                </span>
+                <TimeSpan :time="call.end" class="end" :class="isCurrent && 'fade-text'" />
+            </div>
         </div>
-    </div>
-
+    </Transition>
 </template>
 <script setup lang="ts">
 import RemainMinutes from '@/components/primitives/RemainMinutes.vue';
@@ -49,6 +50,15 @@ const type = computed(() => props.call.type)
 
 </script>
 <style scoped>
+.v-enter-from, .v-leave-to {
+    height: 0;
+    opacity: 0;
+}
+
+.v-enter-active, .v-leave-active {
+    transition: all 300ms ease;
+}
+
 .call,
 .current-call {
     display: flex;
@@ -56,6 +66,7 @@ const type = computed(() => props.call.type)
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem;
+    border-radius: 1rem;
 }
 
 .current-call {
@@ -67,15 +78,23 @@ const type = computed(() => props.call.type)
 }
 
 .lesson {
-    border-radius: 1rem;
     background: var(--middle);
+}
+
+.current-call.lesson {
+    background: var(--accent);
+}
+
+.current-call.big-break, .current-call.break {
+    background: var(--top);
 }
 
 .big-break {
     justify-content: center;
 }
 
-.name, .active-name {
+.name,
+.active-name {
     font-size: 1.25rem;
     color: var(--text);
 }
@@ -90,12 +109,13 @@ const type = computed(() => props.call.type)
 }
 
 .remain-time {
-    max-width: 5rem;
+    max-width: 6rem;
     width: max-content;
     text-align: end;
     line-height: 100%;
     font-weight: var(--f_semi-bold);
     font-size: 1.25rem;
+    color: var(--text);
 }
 
 .time {
