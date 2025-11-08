@@ -1,5 +1,5 @@
 <template>
-    <img src="/public/stickers/404.png"></img>
+    <img src="/src/stickers/404.png"></img>
 </template>
 
 <style scoped>

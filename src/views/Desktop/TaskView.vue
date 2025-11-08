@@ -1,8 +1,25 @@
 <template>
-    Task view
+  <Calendar />
+  <main class="content">
+    <WaitASecond v-if="tasks.loading.value" />
+    <Container v-else-if="list">
+      <Container v-if="list.length === 0">
+        <NoDataSticker />
+        Тут пока пусто
+      </Container>
+      <Container v-else>
+        <Task v-for="task in list" :task />
+      </Container>
+    </Container>
+  </main>
 </template>
 
 <script setup lang="ts">
+import Calendar from '@/components/Desktop/TaskView/Calendar/Calendar.vue';
+import Task from '@/components/Desktop/TaskView/Task/Task.vue';
+import Container from '@/components/primitives/Container.vue';
+import WaitASecond from '@/components/primitives/Spinner/WaitASecond.vue';
+import NoDataSticker from '@/components/stickers/NoDataSticker.vue';
 import type { UseDataResult } from '@/data/functions/useData';
 import type { date, task } from '@/data/types';
 
@@ -13,5 +30,5 @@ const props = defineProps<{
   untaskedLessons: UseDataResult<string[]>
 }>()
 
-
+const list = props.tasks.data;
 </script>
