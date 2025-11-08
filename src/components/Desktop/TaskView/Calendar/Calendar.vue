@@ -5,7 +5,7 @@
 <template>
     <div class="calendar-wrapper">
         <span class="header">
-            Выбранный день: <span class="selected-day">
+            Выбранный день: <span class="selected-day custom">
                 {{ dayName }}, {{ date.day }}
             </span>
         </span>
@@ -14,7 +14,7 @@
                 <div class="dot custom"></div>
                 <div class="date-select">
                     <span class="day"> {{ date.day }}</span>
-                    <span class="month-name"> {{ monthName}}</span>
+                    <span class="month-name"> {{ monthName }}</span>
                     <span class="year"> {{ date.year }}</span>
                 </div>
             </div>
@@ -70,13 +70,28 @@ const afterTomorrowD = computed<date>(() => ({ day: 10, month: 11, year: 2025 })
 }
 
 .header {
+    display: inline-flex;
+    gap: 1rem;
     text-align: center;
 }
+
+.selected-day {
+    color: var(--text);
+}
+
+.selected-day.custom {
+    color: var(--accent);
+}
+
+.selected-day.tommorow {
+    color: var(--deaccent);
+}
+
 
 .body {
     display: flex;
     flex-direction: column;
-    gap:0.5rem;
+    gap: 0.5rem;
 }
 
 .option {
@@ -84,6 +99,7 @@ const afterTomorrowD = computed<date>(() => ({ day: 10, month: 11, year: 2025 })
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+    cursor: pointer;
 }
 
 .dot {
@@ -94,6 +110,7 @@ const afterTomorrowD = computed<date>(() => ({ day: 10, month: 11, year: 2025 })
 }
 
 .option.active .dot {
+    box-sizing: content-box;
     background-color: var(--top);
     border-top: 0.125rem solid var(--light);
 }
@@ -112,9 +129,11 @@ const afterTomorrowD = computed<date>(() => ({ day: 10, month: 11, year: 2025 })
 .dot.custom::before {
     background-color: var(--accent);
 }
+
 .dot.tommorow::before {
     background-color: var(--deaccent);
 }
+
 .dot.after-tommorow::before {
     background-color: var(--top);
 }

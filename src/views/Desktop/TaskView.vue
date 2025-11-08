@@ -1,6 +1,6 @@
 <template>
   <Calendar :date />
-  <WaitASecond v-if="tasks.loading" class="loading"/>
+  <WaitASecond v-if="tasks.loading.value" class="loading"/>
   <main class="content" v-else-if="list">
     <Container v-if="list.length === 0">
       <NoDataSticker />
