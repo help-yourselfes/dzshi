@@ -1,5 +1,5 @@
 <template>
-  <Calendar />
+  <Calendar :date />
   <main class="content">
     <WaitASecond v-if="tasks.loading.value" />
     <Container v-else-if="list">
