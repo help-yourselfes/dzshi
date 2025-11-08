@@ -1,15 +1,13 @@
 <template>
   <Calendar :date />
-  <main class="content">
-    <WaitASecond v-if="tasks.loading.value" />
-    <Container v-else-if="list">
-      <Container v-if="list.length === 0">
-        <NoDataSticker />
-        Тут пока пусто
-      </Container>
-      <Container v-else>
-        <Task v-for="task in list" :task />
-      </Container>
+  <WaitASecond v-if="tasks.loading" class="loading"/>
+  <main class="content" v-else-if="list">
+    <Container v-if="list.length === 0">
+      <NoDataSticker />
+      Тут пока пусто
+    </Container>
+    <Container v-else>
+      <Task v-for="task in list" :task />
     </Container>
   </main>
 </template>
@@ -33,7 +31,16 @@ const props = defineProps<{
 const list = props.tasks.data;
 </script>
 
+<style>
+.view.tasks {
+  gap: 2rem;
+}
+</style>
+
 <style scoped>
+.loading {
+  padding: 2rem;
+}
 main {
   box-sizing: content-box;
   display: grid;
