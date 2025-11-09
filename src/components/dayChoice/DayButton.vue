@@ -31,15 +31,16 @@ const fullName = computed(() => props.day.name)
     text-decoration: none;
     transition: all 300ms;
     border-radius: 999px;
-    color: gray;
-    font-weight: 200;
+    color: var(--light);
+    font-weight: var(--f_light);
     cursor: pointer;
+    padding: 0 0.75rem;
 }
 
 .current {
-    font-weight: 700;
-    background-color: lightgray;
-    color: black;
+    font-weight: var(--f_bold);
+    background-color: var(--top);
+    color: var(--text);
     height: 3rem;
     display: inline-flex;
     padding: 0 2rem;

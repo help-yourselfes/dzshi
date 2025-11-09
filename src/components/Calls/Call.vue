@@ -4,11 +4,11 @@
             {{ name }}
         </span>
         <div class="time">
-            <TimeSpan :time="call.start" class="start" :class="isCurrent && 'fade-text'"/>
+            <TimeSpan :time="call.start" class="start" :class="{'fade-text': isCurrent}" />
             <span v-if="isCurrent" class="remain-time">
                 <RemainMinutes :end="call.end" />
             </span>
-            <TimeSpan :time="call.end" class="end" :class="isCurrent && 'fade-text'"/>
+            <TimeSpan :time="call.end" class="end" :class="{'fade-text': isCurrent}" />
         </div>
     </div>
 
@@ -51,49 +51,48 @@ const classNames = computed(() => {
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem;
+    border-radius: 1rem;
 }
 
 .current-call {
-    padding: 2rem;
+    padding: 1.5rem;
+    background: var(--top);
+}
+
+.current-call.lesson {
+    background: var(--accent);
 }
 
 .fade-text {
+    color: var(--text);
     opacity: 0.5;
 }
 
-html.mobile {
+.lesson {
+    background: var(--middle);
+}
 
-    .lesson {
-        border-radius: 1rem;
-        background: lightgray;
-    }
+.active-name {
+    font-weight: var(--bold);
+}
 
-    .big-break {
-        justify-content: center;
-    }
+.start,
+.end {
+    width: max-content;
+    color: var(--light)
+}
 
-    .active-name {
-        font-weight: 600;
-    }
+.remain-time {
+    max-width: 6rem;
+    width: max-content;
+    text-align: end;
+    line-height: 100%;
+    font-weight: var(--bold)
+}
 
-    .start,
-    .end {
-        width: max-content;
-    }
-
-    .remain-time {
-        max-width: 5rem;
-        width: max-content;
-        text-align: end;
-        line-height: 100%;
-        font-weight: 600;
-    }
-
-    .time {
-        display: flex;
-        flex-direction: column;
-        align-items: end;
-    }
-
+.time {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 </style>

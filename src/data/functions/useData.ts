@@ -2,7 +2,7 @@ import { ref, type Ref, type UnwrapRef } from "vue"
 export type UseDataResult<T> = {
   data: Ref<UnwrapRef<T> | null>;
   loading: Ref<boolean>;
-  error: Ref<Error | null>;
+  error: Ref<any | null>;
   reload: () => Promise<void>;
 };
 

@@ -1,20 +1,19 @@
 <template>
     <DaySelect :selectedDayId="dayId" />
     <Container v-if="calls.loading.value || calls.error.value">
-        <div v-if="calls.loading.value" class="center">
-            Загружаю
-            <Spinner />
-        </div>
-        <div v-else-if="calls.error.value?.message === 'unsupported day'" class="unsupported-day">
+        <WaitASecond v-if="calls.loading.value" class="center" />
+        <div v-else-if="calls.error.value === 'unsupported day'" class="unsupported-day">
             Этот день не поддерживается
+            <NoDataSticker class="sticker" />
         </div>
         <ErrorBox :error="calls.error.value" v-else />
     </Container>
     <Container v-else>
         <div class="list" v-if="currentCallId.data">
-            <Container v-for="(call, key) in calls.data.value">
-                <Call :call :key :isCurrent="key === currentCallId.data.value" />
-            </Container>
+            <Call v-for="(call, key) in calls.data.value" :call :key :isCurrent="key === 
+            // currentCallId.data.value
+            7
+            " />
         </div>
     </Container>
 </template>
@@ -26,7 +25,8 @@ import Call from '@/components/Calls/Call.vue';
 import DaySelect from '@/components/dayChoice/DaySelect.vue';
 import Container from '@/components/primitives/Container.vue';
 import ErrorBox from '@/components/primitives/ErrorBox.vue';
-import Spinner from '@/components/primitives/Spinner/Spinner.vue';
+import WaitASecond from '@/components/primitives/Spinner/WaitASecond.vue';
+import NoDataSticker from '@/components/stickers/NoDataSticker.vue';
 import type { UseDataResult } from '@/data/functions/useData';
 import type { callInfo } from '@/data/types';
 
@@ -37,6 +37,14 @@ const props = defineProps<{
 }>()
 
 </script>
+<style>
+.view.calls {
+    flex-direction: column;
+    justify-content: start;
+    gap: 1rem;
+}
+</style>
+
 <style scoped>
 .center {
     justify-content: center;
@@ -45,15 +53,22 @@ const props = defineProps<{
 .unsupported-day {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    text-align: center;
     padding: 1rem;
     border-radius: 1rem;
-    background-color: lightgray;
+    background-color: var(--middle);
     margin: 1rem;
+}
+
+.sticker {
+    width: 16rem;
 }
 
 .list {
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
+    width: 100%;
 }
 </style>
