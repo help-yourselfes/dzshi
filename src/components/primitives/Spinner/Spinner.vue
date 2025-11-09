@@ -16,12 +16,12 @@
     justify-content: start;
     align-items: center;
     border-radius: 100%;
-    background-color: lightgray;
+    background-color: var(--middle);
 }
 
 .spinner::before {
     content: '';
-    background-color: gray;
+    background-color: var(--accent);
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 100%;
