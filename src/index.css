@@ -2,10 +2,6 @@
 }
 
 html {
-  --background:  white;
-  --text: black;
-  --font: 'Roboto'
-
   --input: #161616;
   --input-light:#333333;
   
@@ -14,11 +10,32 @@ html {
   --middle: #2C2621;
   --top: #3B332B;
   --light: #8C8680;
-
+  
   --accent-dark: #986512;
   --accent: #FFBF00;
+  
+  --deaccent: #FF4400;
 
-  --accent-add: #FF4400;
+  --background:  var(--back);
+  --text: white;
+  --font: 'Roboto';
+
+  font-family: --font, system-ui;
+
+
+  --f_thin:100;
+  --f_extra-light:200;
+  --f_light:300;
+  --f_regular: 400;
+  --f_medium: 600;
+  --f_semi-bold: 650;
+  --f_bold: 700;
+  --f_extra-bold: 800;
+  --f_black: 900;
+
+  color: var(--text);
+  font-weight: var(--f_medium);
+  background-color: var(--back);
 }
 
 body {

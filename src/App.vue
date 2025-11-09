@@ -34,19 +34,22 @@ onBeforeUnmount(() => {
 
 <template>
   <NavBar v-if="showNavbar" />
-  <div class="view" :class="route.path === '/about' ? 'about-view' : ''">
+  <div class="view" :class="route.name">
     <RouterView />
   </div>
 </template>
 
 <style scoped>
-
-
 .view {
   padding: 1rem;
-  padding-top:6rem;
+  padding-top: 6rem;
   min-height: 100vh;
   min-width: 100vw;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 html.mobile {
@@ -54,11 +57,9 @@ html.mobile {
     padding: 0.65rem;
     padding-top: 4rem;
   }
-  
+
   .about-view {
     padding-top: 0.65rem;
   }
 }
-
-html.mobile .view {}
 </style>
