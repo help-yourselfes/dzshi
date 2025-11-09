@@ -22,6 +22,5 @@ const props = defineProps({
 
 .open {
     rotate: -90deg;
-
 }
 </style>

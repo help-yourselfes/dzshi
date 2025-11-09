@@ -6,7 +6,7 @@ import IconText from './IconText.vue';
 <template>
     <IconText>
         <template #icon>
-            <CallsIcon />
+            <CallsIcon style="fill: var(--text)"/>
         </template>
         Звонки
     </IconText>

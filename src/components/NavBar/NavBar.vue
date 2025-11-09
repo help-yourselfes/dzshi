@@ -1,7 +1,11 @@
 <template>
     <nav class="nav-bar">
 
-        <AboutButton></AboutButton>
+
+        <RouterLink to="/about" class="about-button">
+            <LogoIcon v-if="isMobile" class="logo-svg" />
+            <img src="/src/icons/dzshi/Logo 48x.png" class="logo-img" v-else />
+        </RouterLink>
 
         <PropsSelect v-if="isMobile" :choices="choices" @change="onViewChange" />
         <Container v-else>
@@ -13,8 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import AboutButton from './AboutButton.vue'
-
 import state from '@/store';
 import { useRoute } from 'vue-router';
 import { computed, watch, type Component } from 'vue';
@@ -24,9 +26,7 @@ import Container from '../primitives/Container.vue';
 import NavButton from './NavButton.vue';
 import router from '@/router';
 import PropsSelect from '../primitives/selects/PropsSelect.vue';
-import SlotsSelect from '../primitives/selects/SlotsSelect.vue';
-import IconText from './IconText.vue';
-import CallsIcon from '@/icons/CallsIcon.vue';
+import LogoIcon from '@/icons/LogoIcon.vue';
 const route = useRoute()
 const isMobile = computed(() => state.isMobile);
 
@@ -86,5 +86,25 @@ html.mobile .nav-bar {
     text-decoration: none;
     text-align: center;
     width: 100%;
+}
+
+.about-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    background: var(--middle);
+}
+
+.about-button__icon {
+    height: 100%;
+    fill: black
+}
+
+.logo-svg {
+    fill: var(--text);
+    height: 2rem;
 }
 </style>
