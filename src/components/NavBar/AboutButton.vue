@@ -1,19 +1,12 @@
 <template>
     <RouterLink to="/about" class="about-button nav-button">
-        <LogoIcon class="about-button__icon"></LogoIcon>
+        <img src="/src/icons/dzshi/Logo 48x.png" />
     </RouterLink>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import LogoIcon from '@/icons/LogoIcon.vue';
-
-export default {
-    components: {
-        LogoIcon
-    }
-
-}
 </script>
 
 <style scoped>

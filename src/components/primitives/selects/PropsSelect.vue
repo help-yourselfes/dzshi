@@ -4,7 +4,7 @@
       <div class="choice">
         <component :is="currentChoice" />
       </div>
-      <DropdownArrowIcon :is-opended="isOpen" />
+      <DropdownArrowIcon :is-opended="isOpen" style="fill: var(--text)"/>
     </button>
 
 
@@ -70,10 +70,11 @@ const toggleDropdown = () => {
 }
 
 .dropdown-button {
+  color: var(--text);
   padding: 0 0.5rem 0 0;
   border-radius: 2rem;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+  background-color: var(--middle);
+  border: 0.125rem solid var(--top);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -100,14 +101,15 @@ const toggleDropdown = () => {
   transition: all 0.2s ease;
 
   width: max-content;
+  font-weight: var(--f_middleS);
 }
 
 .dropdown-menu {
   width: 100%;
   position: absolute;
   top: calc(100% + 0.5rem);
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: var(--middle);
+  border: 0.125rem solid var(--top);
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 99;

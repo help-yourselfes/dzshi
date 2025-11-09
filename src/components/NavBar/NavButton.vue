@@ -25,6 +25,8 @@ const props = defineProps<{
     transition: all 0.2s ease;
 
     width: max-content;
+
+    background-color: var(--middle);
 }
 
 .nav-button:hover {

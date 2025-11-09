@@ -6,7 +6,7 @@ import IconText from './IconText.vue'
 <template>
     <IconText>
         <template #icon>
-            <TasksIcon />
+            <TasksIcon style="fill: var(--text)"/>
         </template>
         Задания
     </IconText>
