@@ -1,5 +1,5 @@
 <template>
-    <nav class="nav-bar">
+    <nav class="nav-bar" :class="isMobile ? 'mobile' : 'desktop'">
 
 
         <RouterLink to="/about" class="about-button">
@@ -69,7 +69,15 @@ watch(() => route.path, (newPath) => {
     box-shadow: 0 0 0 0 black;
 }
 
-html.mobile .nav-bar {
+
+.nav-bar.desktop {
+    background: var(--middle-back);
+    border-radius: 1rem;
+    gap: 0.5rem;
+    padding-right: 0.75rem;
+}
+
+.nav-bar.mobile {
     overflow: visible;
     width: 100vw;
     top: 0;
