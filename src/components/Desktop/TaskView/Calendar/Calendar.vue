@@ -13,9 +13,9 @@
             <div class="option active">
                 <div class="dot custom"></div>
                 <div class="date-select">
-                    <span class="day"> {{ date.day }}</span>
-                    <span class="month-name"> {{ monthName }}</span>
-                    <span class="year"> {{ date.year }}</span>
+                    <Select :choices="daysList" />
+                    <Select :choices="monthList" />
+                    <Select :choices="yearsList" />
                 </div>
             </div>
             <div class="option">
@@ -42,10 +42,12 @@
 
 <script setup lang="ts">
 import DateText from '@/components/primitives/DateText.vue';
+import Select from '@/components/primitives/selects/Select.vue';
 import api from '@/data/functions/Api';
-import { getDayName, getMonthName } from '@/data/functions/time';
+import { aviableYears, getDayName, getMonthLength, monthNames } from '@/data/functions/time';
 import type { date } from '@/data/types';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     date: date
@@ -53,10 +55,23 @@ const props = defineProps<{
 
 const dayName = computed(() => getDayName(api.getDateDayId(props.date)))
 
-const monthName = computed(() => getMonthName(props.date.month - 1))
+const daysList = computed(() => {
+    const list = [];
+    const length = getMonthLength(props.date.month - 1);
+    for (let i = 1; i <= length; i++ ) list.push(i.toString())
+    return list;
+})
+
+const monthList = monthNames;
+const yearsList = aviableYears.map(year => year.toString());
 
 const tomorrowD = computed<date>(() => ({ day: 9, month: 11, year: 2025 }))
 const afterTomorrowD = computed<date>(() => ({ day: 10, month: 11, year: 2025 }))
+
+const router = useRouter();
+const changeDate = (date: date) => {
+    router.push({ path: '/tasks', query: { ...date } });
+}
 </script>
 
 <style scoped>

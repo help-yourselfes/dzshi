@@ -54,6 +54,8 @@ export const monthNames: string[] = [
   "Декабрь"
 ]
 
+export const aviableYears = [2024, 2025, 2026]
+
 export const getDayName = (dayId: number) => dayNames[(dayId + 1001) % 7]
 export const getMonthLength = (month: number) => monthsLength[month]
 export const getMonthName = (month: number) => monthNames[month]
