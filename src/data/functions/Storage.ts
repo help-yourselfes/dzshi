@@ -39,8 +39,8 @@ const Storage: StorageT = {
                 return new Promise((_, rej) => rej({ code: res.status }))
             }
             const data = await res.json();
-            return data
             // return new Promise((req) => setTimeout(() => req(data), 500));
+            return data
         } catch (e) {
             return new Promise((_, rej) => rej(e))
         }

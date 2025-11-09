@@ -1,32 +1,16 @@
 <template>
-    <DaySelect :selectedDayId="dayId" />
-    <Container v-if="calls.loading.value || calls.error.value">
-        <div v-if="calls.loading.value" class="center">
-            Загружаю
-            <Spinner />
-        </div>
-        <div v-else-if="calls.error.value === 'unsupported day'" class="unsupported-day">
-            Этот день не поддерживается
-        </div>
-        <ErrorBox :error="calls.error.value" v-else />
-    </Container>
-    <Container v-else>
-        <div class="list">
-
-            <Container v-for="(call, key) in calls.data.value">
-                <Call :call :key :isCurrent="key === currentCallId.data.value" />
-            </Container>
-
-        </div>
-    </Container>
+    <component :is="AsyncComponent" 
+        :calls
+        :dayId
+        :currentCallId
+    />
 </template>
 
 <script setup lang="ts">
-import Call from '@/components/Calls/Call.vue';
-import DaySelect from '@/components/dayChoice/DaySelect.vue';
-import Container from '@/components/primitives/Container.vue';
-import ErrorBox from '@/components/primitives/ErrorBox.vue';
-import Spinner from '@/components/primitives/Spinner/Spinner.vue';
+import { useResponsiveAsyncView } from './useResponsiveAsyncView';
+
+const { AsyncComponent } = useResponsiveAsyncView('calls');
+
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
 import type { callInfo } from '@/data/types';
@@ -55,6 +39,7 @@ watch(() => route.params.dayId, calls.reload)
 const currentCallId = useData<number>(async () =>
     await api.getCurrentCallId(dayId.value)
 )
+watch(() => calls.data.value?.length, currentCallId.reload)
 
 const timer = setInterval(currentCallId.reload, 60_000);
 onUnmounted(() => {
@@ -63,25 +48,3 @@ onUnmounted(() => {
 
 
 </script>
-<style scoped>
-.center {
-    justify-content: center;
-}
-
-.unsupported-day {
-    display: flex;
-    justify-content: center;
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: lightgray;
-    margin: 1rem;
-}
-
-html.mobile {
-    .list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.65rem;
-    }
-}
-</style>

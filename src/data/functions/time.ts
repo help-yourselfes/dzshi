@@ -32,4 +32,32 @@ const isBetween = (time: time, start: time, end: time) => {
   return (timeN >= startN && timeN <= endN)
 }
 
+export const dayNames = [
+  "Воскресение",
+  'Понедельник',
+  'Вторник',
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
+];
+
+export const monthsLength: number[] = [
+  31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+];
+
+export const monthNames: string[] = [
+  "Январь",   "Февраль",
+  "Март",     "Апрель",  "Май",
+  "Июнь",     "Июль",    "Август",
+  "Сентябрь", "Октябрь", "Ноябрь",
+  "Декабрь"
+]
+
+export const aviableYears = [2024, 2025, 2026]
+
+export const getDayName = (dayId: number) => dayNames[(dayId + 1001) % 7]
+export const getMonthLength = (month: number) => monthsLength[month]
+export const getMonthName = (month: number) => monthNames[month]
+
 export { addTime, toMinutes, parseHHMM, isBetween, currentTime }
