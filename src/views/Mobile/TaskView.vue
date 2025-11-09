@@ -58,6 +58,11 @@ const props = defineProps<{
   untaskedLessons: UseDataResult<string[]>
 }>()
 </script>
+<style>
+.view.tasks {
+  flex-direction: column;
+}
+</style>
 
 <style scoped>
 .task-list-desktop {
