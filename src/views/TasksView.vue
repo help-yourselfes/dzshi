@@ -1,12 +1,14 @@
 <template>
     <div>
-        Пока в разработке ... <DButton @click="router.back()"> Назад </DButton>
+      Пока в разработке ... <DButton @click="router.back()"> Назад </DButton>
     </div>
-  <component :is="AsyncComponent" 
-    :date
-    :tasks
-    :untaskedLessons
-  />
+    <div class="innactive">
+      <component :is="AsyncComponent" 
+      :date
+      :tasks
+      :untaskedLessons
+      />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -69,3 +71,9 @@ watch(
 );
 
 </script>
+
+<style scoped>
+.innactive {
+  opacity: 0.5;
+}
+</style>

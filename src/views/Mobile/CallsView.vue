@@ -11,8 +11,8 @@
     <Container v-else>
         <div class="list" v-if="currentCallId.data">
             <Call v-for="(call, key) in calls.data.value" :call :key :isCurrent="key === 
-            // currentCallId.data.value
-            7
+            currentCallId.data.value
+            // 7
             " />
         </div>
     </Container>

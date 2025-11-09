@@ -45,31 +45,39 @@ import VueIcon from '@/icons/tools/VueIcon.vue';
 </template>
 
 <style>
-.about-view {
+.about.view {
     height: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 4rem;
 
+    gap: 0;
+    flex-direction: column;
 
     .nav-button {
         padding: 0.5rem 1rem;   
-        background-color: lightgray;
+        background-color: var(--middle);
     }
 
     .nav-button:hover {
         scale: 1.05;
     }
 }
+.main-info {
+    .logo {
+        height: 6.75rem;
+    }
 
-html.mobile {
-    .about-view {
-        gap: 0;
-        flex-direction: column;
+    .logo-picture {
+        fill: var(--accent)
+    }
+
+    .logo-text {
+        fill: var(--text)
     }
 }
+
 </style>
 
 <style scoped>
@@ -84,6 +92,7 @@ html.mobile {
 .logo {
     height: 5rem;
     margin-bottom: 1.5rem;
+
 }
 
 
@@ -96,7 +105,7 @@ html.mobile {
 }
 
 .title {
-    background-color: lightgrey;
+    background-color: var(--top);
     padding: 1.5rem;
     border-radius: 2rem;
     margin: 1rem;
