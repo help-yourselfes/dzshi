@@ -24,6 +24,7 @@ import { computed, onUnmounted, ref } from 'vue';
 const props = defineProps<{
     choices: string[],
     defaultChoice?: number,
+    modelValue?: string
 }>()
 
 const currentChoiceId = ref(props.defaultChoice || 0);
@@ -56,12 +57,16 @@ const toggle = () => {
 
 const close = () => {
     isOpen.value = false;
-    console.log('close')
 }
+
+const emit = defineEmits(['update', 'update:modelValue']);
 
 const updateChoice = (newChoiceID: number) => {
     closeTimer = setTimeout(close, 0)
+    if (currentChoiceId.value === newChoiceID) return;
     currentChoiceId.value = newChoiceID;
+    if (props.modelValue) emit("update:modelValue", props.choices[newChoiceID])
+    else emit("update", newChoiceID)
 }
 
 let closeTimer = 0;
@@ -76,6 +81,7 @@ onUnmounted(() => clearTimeout(closeTimer))
     background: var(--input);
     padding: 0.5rem 0.5rem;
     border-radius: 0.5rem;
+    min-width: 2.5rem;
 }
 
 .select:not(.open) {
@@ -97,25 +103,37 @@ onUnmounted(() => clearTimeout(closeTimer))
 }
 
 .select::after {
+    width: unset;
+    height: unset;
     z-index: -1;
     background: var(--input);
     padding: 0;
-    top: 0;
-    left: 0;
+    top: 0.1rem;
+    bottom: 0.1rem;
+    left: 1rem;
+    right: 1rem;
     transition: all 200ms ease;
-    border-radius: 0.5rem;
-    border-top: 0 solid var(--input-light);
-    border-bottom: 0 solid var(--input-light);
+    border-radius: 0;
+    border: 0.125rem solid color-mix(in srgb, var(--input-light), transparent 100%);
+    box-sizing: border-box;
+    border-left: none;
+    border-right: none;
 }
 
 .select.hint::after {
-    padding: 0.5rem 0;
-    top: -0.5rem;
-    border-width: 0.0625rem;
+    border-radius: 0.5rem;
+    top: -0.25rem;
+    bottom: -0.25rem;
+    left: 0;
+    right: 0;
+    border-color: var(--input-light);
 }
 
 .selected {
     position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .longest-choice {
