@@ -6,7 +6,7 @@ export type abstractCall = {
 }
 
 export type callInfo = (
-  { type: 'lesson', name: string } |
+  { type: 'lesson', id: string } |
   { type: 'break' } |
   { type: 'big-break' }
 ) & abstractCall;

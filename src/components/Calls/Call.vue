@@ -1,14 +1,18 @@
 <template>
     <div v-if="call.type === 'lesson' || isCurrent" :class="classNames">
-        <span :class="isCurrent ? 'active-name' : 'name'">
-            {{ name }}
+        <LessonName v-if="call.type === 'lesson'" :id="call.id" :class="nameClass" />
+        <span :class="nameClass" v-else>
+            {{ call.type === 'big-break' ?
+                'Большая перемена' :
+                'Перемена'
+            }}
         </span>
         <div class="time">
-            <TimeSpan :time="call.start" class="start" :class="{'fade-text': isCurrent}" />
+            <TimeSpan :time="call.start" class="start" :class="{ 'fade-text': isCurrent }" />
             <span v-if="isCurrent" class="remain-time">
                 <RemainMinutes :end="call.end" />
             </span>
-            <TimeSpan :time="call.end" class="end" :class="{'fade-text': isCurrent}" />
+            <TimeSpan :time="call.end" class="end" :class="{ 'fade-text': isCurrent }" />
         </div>
     </div>
 
@@ -18,26 +22,14 @@ import type { callInfo } from '@/data/types';
 import TimeSpan from '../primitives/TimeSpan.vue';
 import { computed } from 'vue';
 import RemainMinutes from '../primitives/RemainMinutes.vue';
+import LessonName from '../primitives/LessonName.vue';
 
 const props = defineProps<{
     isCurrent?: boolean,
     call: callInfo
 }>();
 
-const name = computed(() => {
-    const call = props.call;
-    const { type } = call;
-    switch (type) {
-        case 'lesson':
-            return call.name
-        case 'break':
-            return 'Перемена'
-        case 'big-break':
-            return "Большая перемена"
-        default:
-            return "Неизвестно"
-    }
-})
+const nameClass = computed(() => props.isCurrent ? 'active-name' : 'name')
 
 const classNames = computed(() => {
     return `${props.isCurrent ? 'current-call' : 'call'} ${props.call.type}`
@@ -70,6 +62,10 @@ const classNames = computed(() => {
 
 .lesson {
     background: var(--middle);
+}
+
+.name, .active-name {
+    color: var(--text);
 }
 
 .active-name {

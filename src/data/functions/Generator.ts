@@ -3,7 +3,7 @@ import { addTime, parseHHMM } from "./time";
 
 
 const generator = {
-    generateCalls: (callsPrefs: callsPrefs, dayPrefs: weekDayData): callInfo[] => {
+    generateCalls: (callsPrefs: callsPrefs, lessonsList: string[]): callInfo[] => {
         function mutateTime(minutes: number) {
             currentTime = addTime(currentTime, minutes);
             return currentTime
@@ -15,14 +15,14 @@ const generator = {
 
         let currentTime: time = parseHHMM(callsPrefs.startTime);
 
-        dayPrefs.lessons.forEach((lesson, lessonNumber) => {
+        lessonsList.forEach((lesson, lessonNumber) => {
             calls.push({
                 type: 'lesson',
                 start: currentTime,
                 end: mutateTime(lessonLength),
-                name: lesson.name
+                id: lesson
             })
-            if (lessonNumber >= dayPrefs.lessons.length - 1) return
+            if (lessonNumber >= lessonsList.length - 1) return
             if (callsPrefs.bigBreak.enabled) {
                 if (callsPrefs.bigBreak.afterLessons.includes(lessonNumber + 1)) {
                     calls.push({
