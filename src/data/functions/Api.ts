@@ -63,9 +63,9 @@ const api = {
         )
         return (await get(`getCalls:${dayId}`, async () => {
             const callsPrefs = await api.getCallsPrefs();
-            const dayPrefs = await api.getDayPrefs(dayId);
+            const lessonsList = await api.getLessonList(dayId);
 
-            return generator.generateCalls(callsPrefs, dayPrefs);
+            return generator.generateCalls(callsPrefs, lessonsList);
         }))
     },
 
@@ -83,7 +83,7 @@ const api = {
     getCurrentCallId: async (dayId: number) =>
         get('currentCall', async () =>
             api.getCallIdFromTime(currentTime(), dayId)
-        , 59_000),
+        , 30_000),
 
     getFullLessonsIdList: (): Promise<string[][]> =>
         get(`getFullLessonsList`, async () => Storage.getLessonList())
@@ -95,9 +95,9 @@ const api = {
             rej(`That day is not aviable: ${dayId}.\n Aviable days: ${days.map(d => d.name).join(', ')}`)
         )
 
-        return (await get(`getLessonList:${dayId}`, async () =>
+        return get(`getLessonList:${dayId}`, async () =>
             (await api.getFullLessonsIdList())[dayId - 1]
-        ))
+        )
     },
 
     getTasks: (date: date): Promise<task[]> =>
