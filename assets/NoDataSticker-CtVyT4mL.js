@@ -1,0 +1,1 @@
+import{_ as o,c as s,o as t}from"./index-DgdmPh6o.js";const c="/dzshi/assets/no-data-KzEJ5IoT.png",e={},_={src:c};function a(n,r){return t(),s("img",_)}const i=o(e,[["render",a],["__scopeId","data-v-50903ed9"]]);export{i as N};

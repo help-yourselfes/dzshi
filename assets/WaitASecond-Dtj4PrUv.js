@@ -1,0 +1,1 @@
+import{S as o}from"./Spinner-W7ZIx7Bm.js";import{d as t,c as s,o as a,g as n,b as r,_ as c}from"./index-DgdmPh6o.js";const _={class:"wait"},p=t({__name:"WaitASecond",setup(d){return(i,e)=>(a(),s("span",_,[e[0]||(e[0]=n(" Секундочку ",-1)),r(o)]))}}),l=c(p,[["__scopeId","data-v-39425b19"]]);export{l as W};
