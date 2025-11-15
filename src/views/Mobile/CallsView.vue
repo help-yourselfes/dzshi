@@ -10,10 +10,10 @@
     </Container>
     <Container v-else>
         <div class="list" v-if="currentCallId.data">
-            <Call v-for="(call, key) in calls.data.value" :call :key :isCurrent="key === 
-            currentCallId.data.value
-            // 7
-            " />
+            <Call v-for="(call, key) in calls.data.value" :call :key :isCurrent="isToday && key ===
+                currentCallId.data.value
+                // 7
+                " />
         </div>
     </Container>
 </template>
@@ -33,7 +33,8 @@ import type { callInfo } from '@/data/types';
 const props = defineProps<{
     dayId: number,
     calls: UseDataResult<callInfo[]>,
-    currentCallId: UseDataResult<number>
+    currentCallId: UseDataResult<number>,
+    isToday: boolean
 }>()
 
 </script>

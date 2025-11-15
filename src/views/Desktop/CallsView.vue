@@ -6,7 +6,7 @@
         </Transition>
         <Transition name="calls">
             <main v-if="!calls.loading.value && !calls.error.value" class="content">
-                <Call v-for="(call, id) in calls.data.value" :call :is-current="id === currentCallId.data.value" :key="id" />
+                <Call v-for="(call, id) in calls.data.value" :call :is-current="isToday && id === currentCallId.data.value" :key="id" />
                 Всего уроков: {{ totalLessons }}
             </main>
         </Transition>
@@ -24,7 +24,8 @@ import { computed } from 'vue';
 const props = defineProps<{
     dayId: number,
     calls: UseDataResult<callInfo[]>,
-    currentCallId: UseDataResult<number>
+    currentCallId: UseDataResult<number>,
+    isToday: boolean
 }>()
 
 const totalLessons = computed(() => props.calls.data.value?.filter(d => d.type === 'lesson').length)
