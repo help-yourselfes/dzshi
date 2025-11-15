@@ -9,12 +9,17 @@
                 {{ currentChoice }}
             </span>
         </span>
-        <div v-if="isOpen" class="choices">
-            <span v-for="(choice, key) in choices" :key="choice" @click="updateChoice(key)"
-                :class="choice === currentChoice ? 'current-text' : 'choice-text'" class="text">
-                {{ choice }}
-            </span>
-        </div>
+        <transition>
+            <div v-show="isOpen" class="choices-wrapper">
+                <div  class="choices">
+                    <span v-for="(choice, key) in choices" :key="choice" @click="updateChoice(key)"
+                        :class="choice === currentChoice ? 'current-text' : 'choice-text'" class="text">
+                        {{ choice }}
+                    </span>
+                </div>
+                <div class="choices-overlay" ></div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -148,11 +153,20 @@ onUnmounted(() => clearTimeout(closeTimer))
     text-align: center;
 }
 
-.choices {
-    position: absolute;
+.choices-wrapper {
+    position: absolute;;
+left: -1rem;
+right: -1rem;
     top: 100%;
-    left: -1rem;
-    right: -1rem;
+    /* width: max-content; */
+    height: max-content;
+    overflow: hidden;
+    border: 0.125rem solid var(--input-light);
+    border-radius: 1rem;
+}
+
+.choices {
+    border-radius: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -160,9 +174,23 @@ onUnmounted(() => clearTimeout(closeTimer))
     background-color: var(--input);
     border-radius: 1rem;
     padding: 1rem;
-    border: 0.125rem solid var(--input-light);
-
+    max-height: 30vh;
+    overflow-y: scroll;
     text-align: center;
+}
+
+.choices-overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    right: -100%;
+    height: 100%;
+    border-radius: 1rem;
+    /* background-color: var(--accent); */
+    box-shadow: 0 0 2rem 1rem inset var(--input);
+    z-index: 99;
+    pointer-events: none;
 }
 
 
@@ -180,5 +208,20 @@ onUnmounted(() => clearTimeout(closeTimer))
 
 .text:active {
     color: var(--accent)
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+    transform: scale(0.2, 0);
+}
+
+.v-enter-active,
+.v-leave-active {
+    
+    transform-origin: center 0;
+    transition: all 300ms 
+    cubic-bezier(0.42,0.00,0.58,1.00)
+    ;
 }
 </style>
