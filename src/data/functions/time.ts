@@ -13,11 +13,11 @@ const convertToCustomDate = (d: Date): date => ({ day: d.getDate(), month: d.get
 export const currentDate = (): date => convertToCustomDate(new Date())
 
 
-export const shiftDate = (base: date): date => {
+export const shiftDate = (base: date, daysCount: number): date => {
   const date = convertFromCustomDate(base);
 
   const shift = (new Date(date));
-  shift.setDate(date.getDate() + 1);
+  shift.setDate(date.getDate() + daysCount);
 
   return convertToCustomDate(shift)
 }
