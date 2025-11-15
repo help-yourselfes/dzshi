@@ -1,5 +1,4 @@
 <template>
-
     <Placeholder v-if="loading" class="placeholder" />
     <span v-else-if="error" class="error">
         {{ id }}

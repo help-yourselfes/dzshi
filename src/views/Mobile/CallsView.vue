@@ -10,10 +10,12 @@
     </Container>
     <Container v-else>
         <div class="list" v-if="currentCallId.data">
+            <TransitionGroup name="calls">
             <Call v-for="(call, key) in calls.data.value" :call :key :isCurrent="key === 
             currentCallId.data.value
             // 7
             " />
+            </TransitionGroup>
         </div>
     </Container>
 </template>
@@ -70,5 +72,19 @@ const props = defineProps<{
     flex-direction: column;
     gap: 0.65rem;
     width: 100%;
+}
+
+.calls-enter-from,
+.calls-leave-to {
+    opacity: 0;
+    transform: translateX(100%);
+}
+.calls-enter-active,
+.calls-leave-active {
+    transition: all 300ms ease-in-out;
+}
+
+.calls-move {
+    transition: all 300ms;
 }
 </style>
