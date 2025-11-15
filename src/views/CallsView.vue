@@ -1,9 +1,5 @@
 <template>
-    <component :is="AsyncComponent" 
-        :calls
-        :dayId
-        :currentCallId
-    />
+    <component :is="AsyncComponent" :calls :dayId :currentCallId :isToday="todayId === dayId" />
 </template>
 
 <script setup lang="ts">
@@ -14,11 +10,19 @@ const { AsyncComponent } = useResponsiveAsyncView('calls');
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
 import type { callInfo, time } from '@/data/types';
-import { onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const dayId = ref<number>(0);
+const todayId = computed(() =>
+    (new Date()).getDay()
+)
+
+const testTime: time = {
+    h: 12,
+    m: 20
+}
 
 const calls = useData<callInfo[]>(
     async () => {
@@ -37,7 +41,7 @@ const calls = useData<callInfo[]>(
 watch(() => route.params.dayId, calls.reload)
 
 const currentCallId = useData<number>(() =>
-    // api.getCallIdFromTime(time.value, dayId.value)
+    // api.getCallIdFromTime(testTime, dayId.value)
     api.getCurrentCallId(dayId.value)
 )
 watch(() => calls.data.value?.length, currentCallId.reload)
@@ -46,6 +50,4 @@ const timer = setInterval(currentCallId.reload, 10_000);
 onUnmounted(() => {
     clearInterval(timer)
 })
-
-
 </script>
