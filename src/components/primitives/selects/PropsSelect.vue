@@ -2,7 +2,7 @@
   <div class="dropdown">
     <button class="dropdown-button" @click="toggleDropdown">
       <div class="choice">
-        <component :is="currentChoice" />
+        <slot name="choice" />
       </div>
       <DropdownArrowIcon :is-opended="isOpen" style="fill: var(--text)"/>
     </button>
@@ -29,14 +29,11 @@ const isOpen = ref(false);
 const props = defineProps<{
   choices: Component[]
 }>()
-const currentChoice = shallowRef(props.choices[0]);
-
 const emit = defineEmits<{
   change: [Component]
 }>()
 
 const handleChange = (newChoice: Component) => {
-  currentChoice.value = newChoice;
   isOpen.value = false;
   emit('change', newChoice)
 }
