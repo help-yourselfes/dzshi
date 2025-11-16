@@ -87,6 +87,7 @@ onUnmounted(() => clearTimeout(closeTimer))
     padding: 0.5rem 0.5rem;
     border-radius: 0.5rem;
     min-width: 2.5rem;
+    z-index: 1;
 }
 
 .select:not(.open) {

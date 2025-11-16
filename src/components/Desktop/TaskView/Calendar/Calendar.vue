@@ -13,9 +13,9 @@
             <div class="option active">
                 <div class="dot custom"></div>
                 <div class="date-select">
-                    <Select :choices="daysList" />
-                    <Select :choices="monthList" />
-                    <Select :choices="yearsList" />
+                    <Select :choices="daysList" :default-choice="today.day - 1"/>
+                    <Select :choices="monthList" :default-choice="today.month - 1"/>
+                    <Select :choices="yearsList" :default-choice="yearsList.indexOf(today.year.toString())"/>
                 </div>
             </div>
             <div class="option">
@@ -46,12 +46,17 @@ import Select from '@/components/primitives/selects/Select.vue';
 import api from '@/data/functions/Api';
 import { aviableYears, currentDate, getDayName, getMonthLength, monthNames, shiftDate } from '@/data/functions/time';
 import type { date } from '@/data/types';
-import { computed, ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     date: date
 }>()
+
+const dateType: Ref<'today' | 'tomorrow' | 'after-tomorrow'> = ref('today');
+const updateDateType = (newType: 'today' | 'tomorrow' | 'after-tomorrow') => {
+    dateType.value = newType;
+};
 
 const dayName = computed(() => getDayName(api.getDateDayId(props.date)))
 
@@ -79,6 +84,7 @@ const changeDate = (date: date) => {
 .calendar-wrapper {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 2rem;
     padding: 1rem;
     border-radius: 1.5rem;
