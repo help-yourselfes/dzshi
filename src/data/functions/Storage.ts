@@ -15,6 +15,7 @@ type StorageT = {
     getDayPrefs: (dayId: number) => Promise<weekDayData>
     getDaysInfo: () => Promise<weekDayInfo[]>
     getTasks: (date: date) => Promise<task[]>
+    getFullLessonsInfo: () => Promise<Record<string, lessonInfo>>
     getLessonInfo: (id: string) => Promise<lessonInfo>
     getLessonList: () => Promise<string[][]>
 } & githubT;
@@ -64,6 +65,10 @@ const Storage: StorageT = {
         const day = date.day.toString().padStart(2, '0')
         const url = `tasks/${year}/${month}/${day}.json`
         return this.request(url)
+    },
+
+    async getFullLessonsInfo () {
+        return Storage.request('lessons/lessonsData.json')
     },
 
     async getLessonInfo(id: string) {
