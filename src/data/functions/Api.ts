@@ -111,9 +111,9 @@ const api = {
 
     getLessonInfo: (id: string): Promise<lessonInfo> =>
         get(`lessonInfo:${id}`, async () => {
-            console.log('there')
+            // console.log('there')
             const list = (await api.getFullLessonsInfo());
-            console.log(list)
+            // console.log(list)
             // return Storage.getLessonInfo(id)
             return list[id]
         }

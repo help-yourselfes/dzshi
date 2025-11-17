@@ -10,7 +10,7 @@ const { AsyncComponent } = useResponsiveAsyncView('calls');
 import api from '@/data/functions/Api';
 import useData from '@/data/functions/useData';
 import type { callInfo, time } from '@/data/types';
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
@@ -49,5 +49,10 @@ watch(() => calls.data.value?.length, currentCallId.reload)
 const timer = setInterval(currentCallId.reload, 10_000);
 onUnmounted(() => {
     clearInterval(timer)
+})
+
+onMounted(() => {
+    api.getFullLessonsInfo()
+    api.getDaysInfo()
 })
 </script>

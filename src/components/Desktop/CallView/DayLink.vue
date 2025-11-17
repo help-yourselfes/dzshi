@@ -44,10 +44,10 @@ defineProps<{
 }
 
 .v-enter-from {
-    transform: translateX(-100%);
+    transform: translateX(100%);
 }
 .v-leave-to {
-    transform: translateX(100%);
+    transform: translateX(-100%);
 }
 .v-enter-active {
     transform-origin: left center;

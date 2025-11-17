@@ -1,7 +1,4 @@
 :root {
-}
-
-html {
   --input: #161616;
   --input-light:#333333;
   
@@ -15,14 +12,14 @@ html {
   --accent: #FFAA00;
   
   --deaccent: #FF4400;
-
+  
   --background:  var(--back);
   --text: white;
   --font: 'Roboto';
-
+  
   font-family: --font, system-ui;
-
-
+  
+  
   --f_thin:100;
   --f_extra-light:200;
   --f_light:300;
@@ -32,14 +29,13 @@ html {
   --f_bold: 700;
   --f_extra-bold: 800;
   --f_black: 900;
-
   color: var(--text);
   font-weight: var(--f_medium);
-  background-color: var(--back);
 }
 
 body {
   min-height: 100vh;
+  background: var(--back);
 }
 
 #app {
