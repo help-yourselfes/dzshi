@@ -1,8 +1,7 @@
 <template>
-
     <Placeholder v-if="loading" class="placeholder" />
     <span v-else-if="error" class="error">
-        {{ id }}
+        {{ id }} {{ error    }}
     </span>
     <span v-else>
         {{ shortName && lesson?.shortName ? lesson.shortName :lesson?.name  }}

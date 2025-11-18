@@ -1,12 +1,10 @@
 <template>
     <div class="wrapper">
-        <DaySelect :dayId />
-        <Transition name="loading">
-            <WaitASecond v-if="calls.loading.value" class="content"/>
-        </Transition>
+        <DaySelect :dayId class="day-select"/>
+        <WaitASecond v-if="calls.loading.value" class="content"/>
         <Transition name="calls">
             <main v-if="!calls.loading.value && !calls.error.value" class="content">
-                <Call v-for="(call, id) in calls.data.value" :call :is-current="id === currentCallId.data.value" :key="id" />
+                <Call v-for="(call, id) in calls.data.value" :call :is-current="isToday && id === currentCallId.data.value" :key="id" />
                 Всего уроков: {{ totalLessons }}
             </main>
         </Transition>
@@ -24,7 +22,8 @@ import { computed } from 'vue';
 const props = defineProps<{
     dayId: number,
     calls: UseDataResult<callInfo[]>,
-    currentCallId: UseDataResult<number>
+    currentCallId: UseDataResult<number>,
+    isToday: boolean
 }>()
 
 const totalLessons = computed(() => props.calls.data.value?.filter(d => d.type === 'lesson').length)
@@ -35,6 +34,11 @@ const totalLessons = computed(() => props.calls.data.value?.filter(d => d.type =
     display: flex;
     gap: 4rem;
     flex-direction: row;
+    align-items: center;
+}
+
+.day-select {
+    height: max-content;
 }
 
 .content {
@@ -48,5 +52,17 @@ main {
     gap: 0.625rem;
     text-align: center;
     color: var(--light)
+}
+
+.calls-enter-from,
+.calls-leave-to {
+    opacity: 0;
+    transform: translateX(10%);
+    scale: 0.9;
+}
+
+.calls-enter-active,
+.calls-leave-active {
+    transition: all 300ms ease-in-out;
 }
 </style>

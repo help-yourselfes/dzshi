@@ -13,9 +13,9 @@
             <div class="option active">
                 <div class="dot custom"></div>
                 <div class="date-select">
-                    <Select :choices="daysList" />
-                    <Select :choices="monthList" />
-                    <Select :choices="yearsList" />
+                    <Select :choices="daysList" :default-choice="today.day - 1"/>
+                    <Select :choices="monthList" :default-choice="today.month - 1"/>
+                    <Select :choices="yearsList" :default-choice="yearsList.indexOf(today.year.toString())"/>
                 </div>
             </div>
             <div class="option">
@@ -23,7 +23,7 @@
                 <div class="option-description">
                     Завтра
                     <span class="date-text">
-                        <DateText :date="tomorrowD" />
+                        <DateText :date="tomorrow" />
                     </span>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                 <div class="option-description">
                     Послезавтра
                     <span class="date-text">
-                        <DateText :date="afterTomorrowD" />
+                        <DateText :date="afterTomorrow" />
                     </span>
                 </div>
             </div>
@@ -44,14 +44,19 @@
 import DateText from '@/components/primitives/DateText.vue';
 import Select from '@/components/primitives/selects/Select.vue';
 import api from '@/data/functions/Api';
-import { aviableYears, getDayName, getMonthLength, monthNames } from '@/data/functions/time';
+import { aviableYears, currentDate, getDayName, getMonthLength, monthNames, shiftDate } from '@/data/functions/time';
 import type { date } from '@/data/types';
-import { computed, ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     date: date
 }>()
+
+const dateType: Ref<'today' | 'tomorrow' | 'after-tomorrow'> = ref('today');
+const updateDateType = (newType: 'today' | 'tomorrow' | 'after-tomorrow') => {
+    dateType.value = newType;
+};
 
 const dayName = computed(() => getDayName(api.getDateDayId(props.date)))
 
@@ -65,8 +70,9 @@ const daysList = computed(() => {
 const monthList = monthNames;
 const yearsList = aviableYears.map(year => year.toString());
 
-const tomorrowD = computed<date>(() => ({ day: 9, month: 11, year: 2025 }))
-const afterTomorrowD = computed<date>(() => ({ day: 10, month: 11, year: 2025 }))
+const today = currentDate()
+const tomorrow = shiftDate(today,1 )
+const afterTomorrow = shiftDate(tomorrow, 2);
 
 const router = useRouter();
 const changeDate = (date: date) => {
@@ -78,6 +84,7 @@ const changeDate = (date: date) => {
 .calendar-wrapper {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 2rem;
     padding: 1rem;
     border-radius: 1.5rem;

@@ -9,9 +9,11 @@
         </span>
         <div class="time">
             <TimeSpan :time="call.start" class="start" :class="{ 'fade-text': isCurrent }" />
-            <span v-if="isCurrent" class="remain-time">
-                <RemainMinutes :end="call.end" />
-            </span>
+            <Transition name="remain-time">
+                <span v-if="isCurrent" class="remain-time">
+                    <RemainMinutes :end="call.end" />
+                </span>
+            </Transition>
             <TimeSpan :time="call.end" class="end" :class="{ 'fade-text': isCurrent }" />
         </div>
     </div>
@@ -44,6 +46,7 @@ const classNames = computed(() => {
     align-items: center;
     padding: 0.75rem;
     border-radius: 1rem;
+    transition: padding 300ms ease;
 }
 
 .current-call {
@@ -64,7 +67,8 @@ const classNames = computed(() => {
     background: var(--middle);
 }
 
-.name, .active-name {
+.name,
+.active-name {
     color: var(--text);
 }
 
@@ -83,7 +87,28 @@ const classNames = computed(() => {
     width: max-content;
     text-align: end;
     line-height: 100%;
-    font-weight: var(--bold)
+    font-weight: var(--bold);
+    color: var(--text);
+}
+
+.remain-time-enter-from,
+.remain-time-leave-to {
+    opacity: 0;
+    transform-origin: 100% 0%;
+    transform: scaleY(0);
+    /* transform: translate(300%, -50%); */
+    height: 0;
+}
+
+.remain-time-enter-to,
+.remain-time-leave-from {
+    height: 2rem;
+}
+
+
+.remain-time-enter-active,
+.remain-time-leave-active {
+      transition: all 0.5s ease;
 }
 
 .time {

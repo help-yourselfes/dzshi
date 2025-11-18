@@ -7,9 +7,16 @@
             <img src="/src/icons/dzshi/Logo 48x.png" class="logo-img" v-else />
         </RouterLink>
 
-        <PropsSelect v-if="isMobile" :choices="choices" @change="onViewChange" />
+        <PropsSelect v-if="isMobile" :choices="choices" @change="onViewChange">
+            <template v-slot:choice>
+                <component :is="currentView" />
+            </template>
+            <template v-slot>
+                <component v-for="page in pages" :is="page.component" />
+            </template>
+        </PropsSelect>
         <Container v-else>
-            <NavButton v-for="page in pages" :to="page.path" :key="page.path">
+            <NavButton v-for="page in pages" :to="page.path[0]" :key="page.path[0]">
                 <component :is="page.component" />
             </NavButton>
         </Container>
@@ -19,7 +26,7 @@
 <script setup lang="ts">
 import state from '@/store';
 import { useRoute } from 'vue-router';
-import { computed, watch, type Component } from 'vue';
+import { computed, onMounted, ref, watch, type Component } from 'vue';
 import CallsText from './CallsText.vue';
 import TasksText from './TasksText.vue';
 import Container from '../primitives/Container.vue';
@@ -30,29 +37,37 @@ import LogoIcon from '@/icons/LogoIcon.vue';
 const route = useRoute()
 const isMobile = computed(() => state.isMobile);
 
-const pages: { component: Component, path: string }[] = [
+const pages: { component: Component, path: string[] }[] = [
     {
         component: CallsText,
-        path: '/calls'
+        path: ['/calls']
     },
     {
         component: TasksText,
-        path: '/'
+        path: ['/', '/tasks']
     }
 ]
 const choices = computed(() => pages.map(v => v.component))
+const currentViewId = ref(0);
+const currentView = computed(() => choices.value[currentViewId.value])
 
 const onViewChange = (newChoice: Component) => {
-    const n = pages.find(v => v.component === newChoice);
-    if (!n) return;
-    const path = n.path;
+    const index = pages.findIndex(v => v.component === newChoice);
+    if (index === -1) return;
+    const n = pages[index];
+    currentViewId.value = index;
+    const path = n.path[0];
     router.push({ path })
 }
 
-
-watch(() => route.path, (newPath) => {
-    console.log('route changed to', newPath)
-})
+const updateView = () => {
+    const newPath = route.path.split('/').splice(-1,1)[0];
+    const index = pages.findIndex(v => v.path.includes( '/'+newPath));
+    if (index === -1) return;
+    currentViewId.value = index;
+}
+onMounted(updateView)
+watch(() => route.path, updateView)
 </script>
 
 <style scoped>

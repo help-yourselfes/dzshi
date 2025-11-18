@@ -4,6 +4,7 @@
         <div class="list">
             <Select :choices @update="(choice) => uni = choices[choice]"> </Select>
             <Select :choices="['a', 'b', 'c', 'd']" v-model="letter"> </Select>
+            <Select :choices="numbers" />
         </div>
     </div>
 </template>
@@ -17,6 +18,8 @@ const choices = [
 
 const uni = ref(choices[0])
 const letter = ref("a")
+
+const numbers = ref(['a', 'b', 'c', 'd', 'e', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'])
 </script>
 
 <style scoped>

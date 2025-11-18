@@ -10,10 +10,12 @@
     </Container>
     <Container v-else>
         <div class="list" v-if="currentCallId.data">
-            <Call v-for="(call, key) in calls.data.value" :call :key :isCurrent="key === 
-            currentCallId.data.value
-            // 7
-            " />
+            <TransitionGroup name="calls">
+                <Call v-for="(call, key) in calls.data.value" :call :key :isCurrent="isToday && key ===
+                currentCallId.data.value
+                // 7
+                " />
+                </TransitionGroup>
         </div>
     </Container>
 </template>
@@ -33,7 +35,8 @@ import type { callInfo } from '@/data/types';
 const props = defineProps<{
     dayId: number,
     calls: UseDataResult<callInfo[]>,
-    currentCallId: UseDataResult<number>
+    currentCallId: UseDataResult<number>,
+    isToday: boolean
 }>()
 
 </script>
@@ -70,5 +73,19 @@ const props = defineProps<{
     flex-direction: column;
     gap: 0.65rem;
     width: 100%;
+}
+
+.calls-enter-from,
+.calls-leave-to {
+    opacity: 0;
+    transform: translateX(100%);
+}
+.calls-enter-active,
+.calls-leave-active {
+    transition: all 300ms ease-in-out;
+}
+
+.calls-move {
+    transition: all 300ms;
 }
 </style>

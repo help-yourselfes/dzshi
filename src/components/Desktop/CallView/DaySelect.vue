@@ -39,7 +39,7 @@ const text = computed(() => {
 
 .day-list {
     text-align: left;
-    display: flex;
+    display: grid;
     flex-direction: column;
     padding: 0.5rem;
     border-radius: 1rem;

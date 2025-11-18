@@ -1,18 +1,12 @@
 <template>
-    <div>
-      Пока в разработке ... <DButton @click="router.back()"> Назад </DButton>
-    </div>
-    <div class="innactive">
       <component :is="AsyncComponent" 
       :date
       :tasks
       :untaskedLessons
       />
-    </div>
 </template>
 
 <script setup lang="ts">
-import DButton from '@/components/primitives/DButton.vue';
 import { useResponsiveAsyncView } from './useResponsiveAsyncView';
 
 const { AsyncComponent } = useResponsiveAsyncView('tasks');

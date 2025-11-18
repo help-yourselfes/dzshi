@@ -1,4 +1,4 @@
-import type { time } from '../types'
+import type { date, time } from '../types'
 
 const currentTime = (): time => {
   const date = new Date(); return {
@@ -6,6 +6,22 @@ const currentTime = (): time => {
     m: date.getMinutes()
   }
 }
+
+const convertFromCustomDate = (d: date): Date => (new Date(d.year, d.month - 1, d.day))
+const convertToCustomDate = (d: Date): date => ({ day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear() })
+
+export const currentDate = (): date => convertToCustomDate(new Date())
+
+
+export const shiftDate = (base: date, daysCount: number): date => {
+  const date = convertFromCustomDate(base);
+
+  const shift = (new Date(date));
+  shift.setDate(date.getDate() + daysCount);
+
+  return convertToCustomDate(shift)
+}
+
 const addTime = (t: time, minutes: number): time => {
   const total = t.h * 60 + t.m + minutes
   return toTime(total)
@@ -47,9 +63,9 @@ export const monthsLength: number[] = [
 ];
 
 export const monthNames: string[] = [
-  "Январь",   "Февраль",
-  "Март",     "Апрель",  "Май",
-  "Июнь",     "Июль",    "Август",
+  "Январь", "Февраль",
+  "Март", "Апрель", "Май",
+  "Июнь", "Июль", "Август",
   "Сентябрь", "Октябрь", "Ноябрь",
   "Декабрь"
 ]

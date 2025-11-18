@@ -8,7 +8,7 @@ const cache = createCache();
 const get = cache.once;
 
 const api = {
-    getRandomSticker: () => {},
+    getRandomSticker: () => { },
     getCallsPrefs: (): Promise<callsPrefs> =>
         get('callsPrefs', () =>
             Storage.getCallsPrefs()
@@ -83,7 +83,7 @@ const api = {
     getCurrentCallId: async (dayId: number) =>
         get('currentCall', async () =>
             api.getCallIdFromTime(currentTime(), dayId)
-        , 30_000),
+            , 30_000),
 
     getFullLessonsIdList: (): Promise<string[][]> =>
         get(`getFullLessonsList`, async () => Storage.getLessonList())
@@ -105,9 +105,18 @@ const api = {
             Storage.getTasks(date)
         ),
 
+    getFullLessonsInfo: () =>
+        get(`fullLessonInfo`, Storage.getFullLessonsInfo)
+    ,
+
     getLessonInfo: (id: string): Promise<lessonInfo> =>
-        get(`lessonInfo:${id}`, () =>
-            Storage.getLessonInfo(id)
+        get(`lessonInfo:${id}`, async () => {
+            // console.log('there')
+            const list = (await api.getFullLessonsInfo());
+            // console.log(list)
+            // return Storage.getLessonInfo(id)
+            return list[id]
+        }
         )
 
 }
